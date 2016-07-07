@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta(name='viewport', content='width-device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h2  Welcome, board page!
+    h3  board content add page
+    div
+      table(class = "table table-inverse")
+        form(action='/board/add', method='post')
+          tr
+            th BoardTitle
+            td 
+              input(type='text', name='title', placeholder='input title')
+          tr
+            th author
+            td 
+                input(type='text', name='author', placeholder='input author') 
+          tr
+            th content
+            td 
+              textarea(name='content', placeholder='contents')
+          tr
+            td
+              input(type='submit', value='add')

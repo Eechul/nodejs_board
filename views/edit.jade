@@ -1,0 +1,46 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width-device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h2  
+      a(href='/board') Welcome, board page!
+    div
+      table(class="table table-striped")
+        form(action='/board/edit', method='post')
+          tr
+            th Number
+            td
+              input(type='text', name='number', value=board.number, readOnly)
+          tr
+            th Title
+            td
+              input(type='text', name='title' value=board.title)
+          tr
+            th Author
+            td
+              input(type='text', name='author' value=board.author, readOnly)
+          tr
+            th Date
+            td
+              input(type='text', name='date' value=board.date, readOnly)
+          tr
+            th Hit
+            td
+              input(type='text', name='hit', value=board.hit, readOnly)
+          tr
+            th Content
+            td
+              textarea(name='content')=board.content
+          tr
+            td
+              input(type='submit', value='complete')
+            td
+              a(href='/board/'+board.number) cancel
+      
+      
+      
+      

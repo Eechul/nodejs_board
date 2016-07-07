@@ -1,0 +1,27 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jade": "^1.11.0",
+    "node-mysql": "^0.4.2",
+    "supervisor": "^0.11.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eechul/nodejs_board.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eechul/nodejs_board/issues"
+  },
+  "homepage": "https://github.com/Eechul/nodejs_board#readme",
+  "description": ""
+}

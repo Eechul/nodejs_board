@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width-device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h2  
+        a(href='/board') Welcome, board page!
+    div
+      table(class="table table-striped")
+        tr
+          th Number
+          th Title
+          th Author
+          th Date
+          th Hit
+        each board in boards
+          tr
+            td(scope="row")= board.number
+            td
+              a(href='/board/'+board.number)=board.title
+            td=board.author
+            td=board.date
+            td=board.hit
+    a(href='/board/add') add
