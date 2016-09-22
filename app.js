@@ -11,8 +11,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // 페이징
 app.get('/', routes.board.index);
+app.get('/add', routes.board.add);
 
-
+app.post('/add', routes.board.addPost);
 
 app.listen(4002, function () {
   console.log('Example app listening on port 4002!');

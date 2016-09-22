@@ -1,10 +1,11 @@
-.layout {
-    margin: 0 auto;
-    max-width: 90%;
+h5 {
+    font-size: 16px;
+    margin: 0;
 }
-
-.board {
-    border-style: dashed;
-    margin: 0 auto;
-    width: 1000px;
+.panel {
+    
+}
+.list-goup {
+    margin: 0;
+    list-style: none;  
 }

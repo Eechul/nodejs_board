@@ -10,32 +10,28 @@
         <a href="/board"> Welcome, board page!</a>
     </h2>
     
-    <div class="layout">
-        <table class="board">
-            <tr class="">
-               <th>Number</th>
-               <th>Title</th>
-               <th>Author</th>
-               <th>Hit</th>
-               <th>DATE</th>
-            </tr>
-            <% boards.forEach(function(board){%>
-                <tr>
-                    <td><%= board.NUMBER%></td>
-                    <td><a href="/board/"+<%=board.NUMBER%>>
-                        <%= board.TITLE%></a>
-                    </td>
-                    <td><%= board.AUTHOR%></td>
-                    <td><%= board.HIT%></td>
-                    <td><%= board.DATE%></td>
-                </tr>
-            <%})%>
-            <tr>
-                <td>
-                    <a href="/board/add">add</a>
-                </td>
-            </tr>
-        </table>
+    <div class="panel">
+        <ul class="list-goup">
+            <li class="list-goup-item">
+                <div>
+                    div1 임니다
+                </div>
+                <h5>제목입니다</h5>
+            </li>
+            <li class="list-goup-item">
+                <div>
+                    div2 임니다
+                </div>
+            </li>
+            <li class="list-goup-item">
+                <div>
+                    div3 임니다
+                </div>
+            </li>
+            <li class="list-goup-item">
+                
+            </li>
+        </ul>
     </div>
 </body>
 </html>
