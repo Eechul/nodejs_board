@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <mete name="viewport", content="width-device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <h2>
+        <a href="/board"> Welcome, board page!</a>
+    </h2>
+    
+    <div class="layout">
+        <table class="board">
+            <tr class="">
+               <th>Number</th>
+               <th>Title</th>
+               <th>Author</th>
+               <th>Hit</th>
+               <th>DATE</th>
+            </tr>
+            <% boards.forEach(function(board){%>
+                <tr>
+                    <td><%= board.NUMBER%></td>
+                    <td><a href="/board/"+<%=board.NUMBER%>>
+                        <%= board.TITLE%></a>
+                    </td>
+                    <td><%= board.AUTHOR%></td>
+                    <td><%= board.HIT%></td>
+                    <td><%= board.DATE%></td>
+                </tr>
+            <%})%>
+            <tr>
+                <td>
+                    <a href="/board/add">add</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+

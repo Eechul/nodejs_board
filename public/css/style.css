@@ -1,0 +1,10 @@
+.layout {
+    margin: 0 auto;
+    max-width: 90%;
+}
+
+.board {
+    border-style: dashed;
+    margin: 0 auto;
+    width: 1000px;
+}
