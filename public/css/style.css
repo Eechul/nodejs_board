@@ -3,9 +3,17 @@ h5 {
     margin: 0;
 }
 .panel {
-    
+    margin: 0 auto;
+    padding: 10px;
+    width: 1000px;
+    border: 1px solid;
 }
+
 .list-goup {
-    margin: 0;
-    list-style: none;  
+    border: 1px solid red;
+    padding: 30px;
+    list-style: none;
+}
+.list-goup .list-goup-item {
+    border: 1px solid blue;
 }
