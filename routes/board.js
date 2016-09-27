@@ -24,7 +24,7 @@ exports.addPost = function(req, res) {
     var author = req.body.author;
     var content = req.body.content;
     // g와 i는 정규식
-    // g : 발생할 모든 패턴에 대한 전역검색ㅜ
+    // g : 발생할 모든 패턴에 대한 전역검색
     // i : 대/소문자 구분안함
     conn.query(sql, [title, author, content], function(err, boards, fields){
         if(err) {
@@ -146,14 +146,36 @@ exports.editView = function (req, res) {
       res.render('edit', {board:board[0]});
     }
   });
-}
+// }
+// exports.index = function(req, res) {
+//     var sql = 'select * from board_tb'
+//     conn.query(sql, function(err, boards, fields) {
+//         if(err) {
+//             console.log(err)
+//         }
+//         else {
+//             console.log(boards)
+//         }
+//     })
+// }
+// 좋아요 클릭 과정 sql
+// select *
+// from BOARD_LIKE_TB
+// where board_no = ?
+//     and user_cd = ?
+//
+//     존재하는 row 없다? => insert BOARD_LIKE_TB(board_no, user_no)
+//      values(?, ?); [ like_fl 기본값 '1' (추천 상태)]
+//     존재하는 row 있다?(다시눌럿다는건 취소를 말함) => update board_tb set like_fl = 0 where board_no = ? and user_cd = ?
+//     존재하는 row있으면서 fl값 0이면 => update board_tb set like_fl = 1 where board_no = ? and user_cd = ?
+//     간단하다..! 트랜젝션 적용해야함. 같이 변하게
 
 exports.index = function (req, res) {
-  var sql='select * from board';
+  var sql= 'select * from board_tb';
   conn.query(sql, function(err, boards, fields) {
-    var number = req.params.number;
+    var number = req.params.no;
     if(number) {
-        var hitSql= 'update board set hit = hit+1 where number= ?'
+        var hitSql= 'update board_tb set hit = hit+1 where number= ?'
         conn.query(hitSql, [number], function(err, data, fields) {
           if(err) {
             console.log(err);
@@ -181,47 +203,8 @@ exports.index = function (req, res) {
       else {
           console.log(boards)
           res.render('view', {boards:boards})
-        
+
       }
     }
   });
 }
-// board main
-//app.get(['/', '/:number'], function (req, res) {
-//  var sql='select * from board';
-//  conn.query(sql, function(err, boards, fields) {
-//    var number = req.params.number;
-//    if(number) {
-//        var hitSql= 'update board set hit = hit+1 where number= ?'
-//        conn.query(hitSql, [number], function(err, data, fields) {
-//          if(err) {
-//            console.log(err);
-//            res.status(500).send('Internal Server Error');
-//          }
-//          else {
-//            var sql = 'select number,title,author,content,date,hit from board where number =?'
-//            conn.query(sql, [number], function(err, board, fields){
-//              if(err) {
-//                console.log(err);
-//                res.status(500).send('Internal Server Error');
-//              }
-//              else {
-//                res.render('content', {board:board[0]});
-//              }
-//            });
-//          }
-//        });
-//    }
-//    else{
-//      if(err) {
-//        console.log(err);
-//        res.status(500).send('Internal Server Error');
-//      }
-//      else {
-//          console.log(boards)
-//          res.render('view', {boards:boards})
-//        
-//      }
-//    }
-//  });
-//});
