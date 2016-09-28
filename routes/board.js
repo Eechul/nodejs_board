@@ -1,21 +1,68 @@
-var mysql = require('mysql'),
-    conn = mysql.createConnection({
-      host      : 'localhost',
-      user      : 'root',
-      password  : 'dongdb',
-      database  : 'mysql'
-    })
-conn.connect();
 
-//app.get('/add', function (req, res) {
-//  res.render('add'); // test
-//});
+var mysql = require('../config/db/mysql'), // 디비 모듈화
+    pool = mysql.pool
+
+// 이것만 되는 상태. connection pool 시험작업 완료
+exports.index = function (req, res) {
+    var sql= 'select * from board_tb';
+        pool.getConnection(function(err, conn) {
+            conn.query(sql, function(err, boards, fields) {
+                if(err) {
+                    console.log(err);
+                    res.status(500).send('Internal Server Error');
+                } else {      
+                    console.log(boards)
+                    res.send(boards)
+                }
+                conn.release() 
+            })
+        })
+}
+
+
+//  conn.query(sql, function(err, boards, fields) {
+//    var number = req.params.no;
+//    if(number) {
+//        var hitSql= 'update board_tb set hit = hit+1 where number= ?'
+//        conn.query(hitSql, [number], function(err, data, fields) {
+//          if(err) {
+//            console.log(err);
+//            res.status(500).send('Internal Server Error');
+//          }
+//          else {
+//            var sql = 'select number,title,author,content,date,hit from board where number =?'
+//            conn.query(sql, [number], function(err, board, fields){
+//              if(err) {
+//                console.log(err);
+//                res.status(500).send('Internal Server Error');
+//              }
+//              else {
+//                res.render('content', {board:board[0]});
+//              }
+//            });
+//          }
+//        });
+//    }
+//    else{
+//      if(err) {
+//        console.log(err);
+//        res.status(500).send('Internal Server Error');
+//      }
+//      else {
+//          console.log(boards)
+//          res.send(boards)
+//          res.render('view', {boards:boards})
+
+//      }
+//    }
+//  })
+//}
 
 exports.add = function(req, res) {
     res.render('add');
 }
 
-//
+
 // /add
 exports.addPost = function(req, res) {
     var todayDate = require('../config/dateFormat')
@@ -146,7 +193,7 @@ exports.editView = function (req, res) {
       res.render('edit', {board:board[0]});
     }
   });
-// }
+}
 // exports.index = function(req, res) {
 //     var sql = 'select * from board_tb'
 //     conn.query(sql, function(err, boards, fields) {
@@ -169,42 +216,3 @@ exports.editView = function (req, res) {
 //     존재하는 row 있다?(다시눌럿다는건 취소를 말함) => update board_tb set like_fl = 0 where board_no = ? and user_cd = ?
 //     존재하는 row있으면서 fl값 0이면 => update board_tb set like_fl = 1 where board_no = ? and user_cd = ?
 //     간단하다..! 트랜젝션 적용해야함. 같이 변하게
-
-exports.index = function (req, res) {
-  var sql= 'select * from board_tb';
-  conn.query(sql, function(err, boards, fields) {
-    var number = req.params.no;
-    if(number) {
-        var hitSql= 'update board_tb set hit = hit+1 where number= ?'
-        conn.query(hitSql, [number], function(err, data, fields) {
-          if(err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error');
-          }
-          else {
-            var sql = 'select number,title,author,content,date,hit from board where number =?'
-            conn.query(sql, [number], function(err, board, fields){
-              if(err) {
-                console.log(err);
-                res.status(500).send('Internal Server Error');
-              }
-              else {
-                res.render('content', {board:board[0]});
-              }
-            });
-          }
-        });
-    }
-    else{
-      if(err) {
-        console.log(err);
-        res.status(500).send('Internal Server Error');
-      }
-      else {
-          console.log(boards)
-          res.render('view', {boards:boards})
-
-      }
-    }
-  });
-}
