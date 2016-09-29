@@ -3,34 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <mete name="viewport", content="width-device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/font/font-awesome/css/font-awesome.min.css">
     <style>
-/*
-        .chat_layout {
-            border: 1px solid red;
+        * {
+            box-sizing: border-box;
         }
-*/
+        a {
+            text-decoration: none;
+        } 
+        a:hover {
+            color: #99d33f;
+        }
+        a:link, a:active,  {
+            color: black;
+        }
+
+        textarea {
+            margin-top: 10px;
+            overflow: auto;
+        }
+        .chat_layout {
+            height: 1000px;
+        }
+        
         .chatting {
             margin: 0 auto;
-            padding: 30px;
-            width: 950px;
-            height: 800px;
+            width: 700px;
+            height: 1000px;
             border: 1px solid blue;
         }
-        .input {
-            margin-left: 150px;
-            margin-top: 670px;
+        .view {
+            border: 1px solid #a0d64b;
+            padding: 50px;
+            height: 800px;
+            box-shadow: 2px 1px 7px #3b5c07;
+            overflow: auto;
         }
-/*
-        .text_submit {
-            margin-right: 100px;
+
+
+        .input .sub_function{
+            margin-top: 45px;
+            margin-right: 2px;
+            float: left;
         }
-*/
-        .input text_submit {
+        .input .text_submit{
+            margin-top: 45px;
             float: right;
         }
         .text_input {
-            min-width: 600px;
-            max-width:1000px;
+            min-width: 635px;
+        }
+        .you_content, .my_content {
+            margin: 5px;
+/*            border-bottom: 3px solid black;*/
+            padding-bottom: 7px;
+        }
+        .my_content {
+            text-align: right;
+        }
+        .you_name, .my_name, .you_message .message, .my_message .message {
+            display: inline-block;
+        }
+        .you_message .message, .my_message .message {
+            padding: 7px;
+            border: 1px solid #0aa00a;
+        }
+        .you_message .message {
+             border-radius: 15px 15px 15px 1px;
+        }
+        .my_message .message {
+             border-radius: 15px 15px 1px 15px;
+        }
+        .you_content .you_name, .my_content .my_name{
+            margin-bottom: 5px;
+        }
+        
+        .user_list, .function_list {
+            border: 1px solid black;
+            width: 100px;
+        }
+        
+        .function_list {
+            height: 7.5%;
+        }
+        .user_list {
+            right: 1px;
+            bottom: 200px;
+            position: fixed;
+            height: 200px;
+        }
+        .list_title {
+            border-bottom: 1px solid black;
+        }
+        .list_item {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            overflow: auto;
+        }
+        .receive_img {
+            border-radius: 20px;
+            border: 2.5px solid #0aa00a;
+            box-shadow: 1px 1px 1px #0aa00a
+        }
+        .you_content .receive_img {
+            
+            float: left;
+        }
+        .object_send {
+            display: inline-block;
+        }
+        .you_content .file_download {
+            clear: both;
+/*            display: inline-block;*/
+            
         }
     </style>
 </head>
@@ -39,26 +125,163 @@
         <div class="chatting">
             <div class="view">
                 <div class="you_content">
-                    <span class="you_name">동철</span>
+                   <!-- display : inline  -->
+                    <strong class="you_name">동철</strong>
                     <div class="you_message">
-                        안녀엉
+                       <div class="message">
+                            안녀엉
+                       </div>
                     </div>
                 </div>
                 
-                <div class="my_message">
-                    <span class="my_name">동동</span>
-                     <div class="you_message">
-                        으응
+                <div class="my_content">
+                    <!-- display : inline  -->
+                    <strong class="my_name">동동</strong> 
+                    <div class="my_message">
+                        <div class="message">
+                            안녀엉
+                        </div>
                     </div>
                 </div>
+                
+                <!--               이미지 첨부 -->
+                <div class="my_content">
+                    <strong class="my_name">동동</strong>
+                    <div class="my_message">
+                        <div class="image">
+                            <img src="../public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
+                            <div class="file_download">
+                                <span><a href="#">다운로드</a></span>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                 <div class="you_content">
+                    <strong class="you_name">동동</strong>
+                     <div class="you_message">
+                        <div class="image">
+                            <img src="../public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
+                            <div class="file_download">
+                                <span><a href="#">다운로드</a></span>
+                            </div> 
+                        </div>
+                     </div>
+                </div>
+        
+                <!--          파일 첨부     -->
+                <div class="you_content">
+                    <strong class="you_name">동철</strong>
+                     <div class="file">
+                        <div class="file_download">
+                            <a href="#">
+                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
+                                다운로드
+                            </a>
+                        </div> 
+                    </div>
+                </div>
+                
+                <div class="my_content">
+                    <strong class="my_name">동동</strong>
+                    <div class="file">
+                        <div class="file_download">
+                            <a href="#">
+                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
+                                다운로드
+                            </a>
+                        </div> 
+                    </div>
+                </div>
+
             </div>
             <div class="input">
-                <button class="sub_function">+</button>
-                <input type="text" class="text_input">
-                <a href="" class="text_submit">전송</a>
+                <button id="plusMenu" class="sub_function" >+</button>
+                <textarea class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오."></textarea>
+                <span class="text_submit" onClick="sendMessage" style="cursor: pointer">전송</spans>
             </div>
+            <div class="function_list" style="display: none;">
+                <span class="list_title">부가기능</span>
+                <div class="sub_send">
+                    <div>
+                        <input type="file" id="etc_file" accept=".hwp, .exel" onchange="sendFile('file_send')" style="display:none;">
+                        <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
+                    </div>
+                    <div>
+                        <input type="file" id="img_file" accept=".gif, .jpg, .png" onchange="sendFile('img_send')" style="display:none;">
+                        <span id="img_send" class="object_send" onClick="sendFileBox('img_send')" style="cursor:pointer;">이미지 전송</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            
+            <!-- 부가기능 클릭시 box  -->
+<!--
+            <div class="send_"style="left: 50%; bottom: 50%; position: fixed;  display: none;">
+                
+            </div>
+-->
+        </div>
+        <div class="user_list">
+            <span class="list_title">유저리스트</span>
+            <ul class="list_item">
+                <li>id</li>
+                <li>id</li>
+                <li>id</li>
+                <li>id</li>
+            </ul>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $("#plusMenu").click(function () {
+           $(".function_list").toggle(0.1, function() {
+               var menuText = $("#plusMenu").text()
+               if(menuText === "+") {
+                    $("#plusMenu").text("- ")
+               } else {
+                    $("#plusMenu").text("+")
+               }
+           })
+        })
+        $(".object_send").click(function () {
+            $(".function_list").css("display","none");
+            $("#plusMenu").text("+")
+        })
+        var sendMessage = $(".text_submit").click(function () {
+            var text = $(".text_input").text()
+            if(!text) {
+                // 텍스트 미전송
+            } else {
+                // 텍스트 전송
+            }
+//            $('.view').append(  
+//                                  `<div class="my_content">
+//                    <strong class="my_name">동동</strong>
+//                    <div class="file">
+//                        <div class="file_download">
+//                            <a href="#">
+//                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
+//                                다운로드
+//                            </a>
+//                        </div> 
+//                    </div>
+//                </div>`
+//                                  )
+//        $('.view').scrollTop($('.view').prop('scrollHeight'))
+        });
+
+        var sendFileBox = function(selectId) {
+            var tagId = "#"+selectId
+            console.log($(tagId).prev().click())
+        }
+        
+        var sendFile = function(selectId) {
+            var tagId = "#"+selectId
+            console.log($(tagId))
+//            console.log($(tagId).val())
+        }
+    </script>
 </body>
 </html>
 
