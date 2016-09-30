@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <mete name="viewport", content="width-device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/public/font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../font/font-awesome/css/font-awesome.min.css">
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -23,20 +24,20 @@
             overflow: auto;
         }
         .chat_layout {
-            height: 1000px;
+            height: 750px;
         }
         
         .chatting {
             margin: 0 auto;
             width: 700px;
             height: 1000px;
-            border: 1px solid blue;
         }
         .view {
             border: 1px solid #a0d64b;
             padding: 50px;
             height: 800px;
             box-shadow: 2px 1px 7px #3b5c07;
+            clear: both;
             overflow: auto;
         }
 
@@ -87,9 +88,9 @@
             height: 7.5%;
         }
         .user_list {
-            right: 1px;
-            bottom: 200px;
-            position: fixed;
+            float: right;
+            margin-top: -500px;
+            margin-right: 475px;
             height: 200px;
         }
         .list_title {
@@ -124,80 +125,12 @@
     <div class="chat_layout">
         <div class="chatting">
             <div class="view">
-                <div class="you_content">
-                   <!-- display : inline  -->
-                    <strong class="you_name">동철</strong>
-                    <div class="you_message">
-                       <div class="message">
-                            안녀엉
-                       </div>
-                    </div>
-                </div>
-                
-                <div class="my_content">
-                    <!-- display : inline  -->
-                    <strong class="my_name">동동</strong> 
-                    <div class="my_message">
-                        <div class="message">
-                            안녀엉
-                        </div>
-                    </div>
-                </div>
-                
-                <!--               이미지 첨부 -->
-                <div class="my_content">
-                    <strong class="my_name">동동</strong>
-                    <div class="my_message">
-                        <div class="image">
-                            <img src="../public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
-                            <div class="file_download">
-                                <span><a href="#">다운로드</a></span>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-                 <div class="you_content">
-                    <strong class="you_name">동동</strong>
-                     <div class="you_message">
-                        <div class="image">
-                            <img src="../public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
-                            <div class="file_download">
-                                <span><a href="#">다운로드</a></span>
-                            </div> 
-                        </div>
-                     </div>
-                </div>
-        
-                <!--          파일 첨부     -->
-                <div class="you_content">
-                    <strong class="you_name">동철</strong>
-                     <div class="file">
-                        <div class="file_download">
-                            <a href="#">
-                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
-                                다운로드
-                            </a>
-                        </div> 
-                    </div>
-                </div>
-                
-                <div class="my_content">
-                    <strong class="my_name">동동</strong>
-                    <div class="file">
-                        <div class="file_download">
-                            <a href="#">
-                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
-                                다운로드
-                            </a>
-                        </div> 
-                    </div>
-                </div>
-
+              
             </div>
             <div class="input">
                 <button id="plusMenu" class="sub_function" >+</button>
-                <textarea class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오."></textarea>
-                <span class="text_submit" onClick="sendMessage" style="cursor: pointer">전송</spans>
+                <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkKeboard()"></textarea>
+                <span id="sendMsg" class="text_submit" onClick="sendMessage"  style="cursor: pointer">전송</spans>
             </div>
             <div class="function_list" style="display: none;">
                 <span class="list_title">부가기능</span>
@@ -213,22 +146,10 @@
                 </div>
                 
             </div>
-            
-            
-            <!-- 부가기능 클릭시 box  -->
-<!--
-            <div class="send_"style="left: 50%; bottom: 50%; position: fixed;  display: none;">
-                
-            </div>
--->
         </div>
         <div class="user_list">
             <span class="list_title">유저리스트</span>
             <ul class="list_item">
-                <li>id</li>
-                <li>id</li>
-                <li>id</li>
-                <li>id</li>
             </ul>
         </div>
     </div>
@@ -268,7 +189,7 @@
 //                    </div>
 //                </div>`
 //                                  )
-//        $('.view').scrollTop($('.view').prop('scrollHeight'))
+        $('.view').scrollTop($('.view').prop('scrollHeight'))
         });
 
         var sendFileBox = function(selectId) {
@@ -279,9 +200,9 @@
         var sendFile = function(selectId) {
             var tagId = "#"+selectId
             console.log($(tagId))
-//            console.log($(tagId).val())
         }
     </script>
+    <script type="text/javascript" src="../js/chatClient.js"></script>
 </body>
 </html>
 
