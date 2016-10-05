@@ -119,17 +119,28 @@
 /*            display: inline-block;*/
             
         }
+        .typingText {
+            padding : 2px 2px;
+            visibility: visible;
+        }
+        .nickname {
+            visibility: hidden;
+        }
     </style>
 </head>
 <body>
     <div class="chat_layout">
         <div class="chatting">
             <div class="view">
-              
+            
+           
             </div>
+             <div class="typingText">
+                <span class="nickname">경고창 및 타이핑 문</span>
+                </div>
             <div class="input">
                 <button id="plusMenu" class="sub_function" >+</button>
-                <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkKeboard()"></textarea>
+                <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkEnter()" onkeydown="checkKeyboard()"></textarea>
                 <span id="sendMsg" class="text_submit" onClick="sendMessage"  style="cursor: pointer">전송</spans>
             </div>
             <div class="function_list" style="display: none;">

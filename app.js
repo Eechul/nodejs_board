@@ -45,16 +45,17 @@ io.on('connection', function(socket) {
     
     socket.on('text message', function(data) {
         userInfo.users.forEach( function(value, index) {
-            console.log("for  ",value.id, socket.id)
-            if(value.id == socket.id) {
+            if(value.id === socket.id) {
                 io.emit('text message', {msg : data, user : value})
-                console.log(value)
-                return true
+                return false;
             }
-            return false
         })
     })
     
+    socket.on('keyboard typing', function(data) {
+        io.emit('notice typing', {user: data.user})
+        return true
+    })
     socket.on('disconnect', function() {
         console.log('user disconnected')
         userInfo.users.forEach( function(value, index) {
@@ -77,6 +78,8 @@ app.post('/add', routes.board.addPost);
 // 채팅
 app.get('/chat', routes.chatting.index)
 
+// 인스타 테스트
+app.get('/instar', routes.instar.index);
 http.listen(4002, function () {
   console.log('Example app listening on port 4002!');
 });
