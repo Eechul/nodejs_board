@@ -135,9 +135,17 @@
             
            
             </div>
-             <div class="typingText">
+            <div class="typingText">
                 <span class="nickname">경고창 및 타이핑 문</span>
+            </div>
+            <div class="fileUploadView" style="display: none;">
+                <div>
+                    <img src="" alt="" id="uploadFile" width="25%">
                 </div>
+                <div class="fileUploadName"></div>
+                <button id="cancleUpload">취소</button>
+            </div>
+           
             <div class="input">
                 <button id="plusMenu" class="sub_function" >+</button>
                 <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkEnter()" onkeydown="checkKeyboard()"></textarea>
@@ -147,11 +155,11 @@
                 <span class="list_title">부가기능</span>
                 <div class="sub_send">
                     <div>
-                        <input type="file" id="etc_file" accept=".hwp, .exel" onchange="sendFile('file_send')" style="display:none;">
+                        <input type="file" id="etc_file" accept=".hwp, .exel" onchange="sendFile('etc_file')" style="display:none;">
                         <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
                     </div>
                     <div>
-                        <input type="file" id="img_file" accept=".gif, .jpg, .png" onchange="sendFile('img_send')" style="display:none;">
+                        <input type="file" id="img_file" accept=".gif, .jpg, .png" onchange="javascript:getPath(this);" style="display:none;">
                         <span id="img_send" class="object_send" onClick="sendFileBox('img_send')" style="cursor:pointer;">이미지 전송</span>
                     </div>
                 </div>
@@ -165,6 +173,8 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/socket.io-stream.js"></script>
+        <script type="text/javascript" src="../js/chatClient.js"></script>
     <script>
         $("#plusMenu").click(function () {
            $(".function_list").toggle(0.1, function() {
@@ -210,10 +220,35 @@
         
         var sendFile = function(selectId) {
             var tagId = "#"+selectId
-            console.log($(tagId))
+            console.log(document.getElementById(selectId).value)
         }
+        
+        function getPath(obj) {
+            obj.select();
+            var fileName = obj.files[0].name;
+            var fReader = new FileReader()
+            // FileReader 객체는 IE 10부터 지원.. 단점!
+            fReader.readAsDataURL(obj.files[0]);
+            fReader.onloadend = function(event) {
+                var img = document.getElementById("uploadFile")
+                img.src = event.target.result
+                img.alt = fileName
+                $(".fileUploadName").text(fileName)
+                $(".fileUploadView").css("display", "block")   
+            }
+            console.log(obj.files[0])
+            var stream = ss.createStream()
+            ss(socket).emit('file', stream, {name: fileName, size: obj.files[0].size})
+        }
+        $("#cancleUpload").click( function() {
+            // 취소버튼 클릭 시, 이미지 관련 버튼, 태그 숨기거나 비워둠
+            $(".fileUploadView").css("display", "none")
+            var img = document.getElementById("uploadFile")
+            img.src = ""
+            img.alt = ""
+            $("#fileUploadName").text("")
+        })
     </script>
-    <script type="text/javascript" src="../js/chatClient.js"></script>
 </body>
 </html>
 

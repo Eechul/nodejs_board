@@ -2,9 +2,16 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var routes = require('./routes/index.js')
 
+var path = require('path');
+
+var fs = require('fs');
+
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+// 실험
+var ss = require('socket.io-stream');
 
 app.locals.pretty = true;
 app.set('view engine', 'ejs');
@@ -42,7 +49,6 @@ io.on('connection', function(socket) {
     // 아이디를 클라이언트들에게 전송
      io.emit('user list', {user: userInfo})
     
-    
     socket.on('text message', function(data) {
         userInfo.users.forEach( function(value, index) {
             if(value.id === socket.id) {
@@ -67,6 +73,10 @@ io.on('connection', function(socket) {
             return false
         })
         // 중복 메소드 => 모듈화
+    })
+    ss(socket).on('file', function(stream, data) {
+        fs.createWriteStream(data.name)
+        return true;
     })
 })
 

@@ -1,9 +1,11 @@
 var socket = io();
+
 var user = {
     id : 0,
     nickname : 0
 }
 var user_list
+// 엔터키 체크
 function checkEnter() {
     if(event.keyCode === 13) {
         if($("#inputMsg").val().length !== 1) {
@@ -22,10 +24,12 @@ function checkEnter() {
         return ;
     }    
 }
+// 실시간 키보드 체크
 function checkKeyboard()  {
     // 입력 하면 바로바로 서버에 정보 전송
     socket.emit('keyboard typing',{ user: user })
 }
+
 $("#sendMsg").click(function() {   
     console.log($("#inputMsg").val());
     if($("#inputMsg").val().length !== 0) {
@@ -103,4 +107,6 @@ socket.on('notice typing', function(data) {
         }, 850) // 모듈화
     }
 })
+
+
 socket.emit('disconnect')
