@@ -5,21 +5,36 @@ var user = {
     nickname : 0
 }
 var user_list
+
+var inputMsg = $("#inputMsg")
+var fileUploadView = $(".fileUploadView")
 // 엔터키 체크
 function checkEnter() {
     if(event.keyCode === 13) {
-        if($("#inputMsg").val().length !== 1) {
-            socket.emit('text message', $("#inputMsg").val())
-            $("#inputMsg").val("")
+        if(inputMsg.val().length !== 1) {
+            if(!fileUploadView.is(":hidden")) {
+                // 보낼 파일이 있을때, 업로드 하려는 파일이름
+                // 예)dongChat_20161017_(고유코드).jpg
+                // 을 데이터에 실어 message socket에 보내기
+            } else {
+                socket.emit('message', inputMsg.val())
+                inputMsg.val("")
+            }
         } else {
-            $("#inputMsg").val("")
-            $(".nickname").text("텍스트를 입력해 주십시오")
-            $(".typingText").css("visibility", "visible")
-            $(".nickname").css("visibility", "visible")
-            setTimeout(function() {
-                $(".typingText").css("visibility", "hidden")
-                $(".nickname").css("visibility", "hidden")
-            }, 1000) // 모듈화
+            if(!fileUploadView.is(":hidden")) {
+                // 보낼 파일이 있을때, 업로드 하려는 파일이름
+                // 예)dongChat_20161017_(고유코드).jpg
+                // 을 데이터에 실어 message socket에 보내기
+            } else {
+                 inputMsg.val("")
+                $(".nickname").text("텍스트를 입력해 주십시오")
+                $(".typingText").css("visibility", "visible")
+                $(".nickname").css("visibility", "visible")
+                setTimeout(function() {
+                    $(".typingText").css("visibility", "hidden")
+                    $(".nickname").css("visibility", "hidden")
+                }, 1000) // 모듈화
+            }
         }
         return ;
     }    
@@ -31,14 +46,14 @@ function checkKeyboard()  {
 }
 
 $("#sendMsg").click(function() {   
-    console.log($("#inputMsg").val());
-    if($("#inputMsg").val().length !== 0) {
-            socket.emit('text message', $("#inputMsg").val())
-            $("#inputMsg").val("")
-            $("#inputMsg").focus()
+    console.log(inputMsg.val());
+    if(inputMsg.val().length !== 0) {
+            socket.emit('message', inputMsg.val())
+            inputMsg.val("")
+            inputMsg.focus()
         } else {
-            $("#inputMsg").val("")
-            $("#inputMsg").focus();
+            inputMsg.val("")
+            inputMsg.focus();
             $(".nickname").text("텍스트를 입력해 주십시오")
             $(".typingText").css("visibility", "visible")
             $(".nickname").css("visibility", "visible")
@@ -68,7 +83,7 @@ socket.on('user list', function(data) {
     return false;
 })
 
-socket.on('text message', function(data) {
+socket.on('message', function(data) {
     var msg = data.msg
     var receive_user_info = data.user
     console.log(receive_user_info)
@@ -78,7 +93,11 @@ socket.on('text message', function(data) {
     } else {
         target = ["you_content", "you_name", "you_message", receive_user_info.nickname]
     }
+    // 만약에 파일이 포함 되있다면
+    // target 배열에 구분할만한 변수를 더 실고
+    // 
     
+    // 파일 없을때
     var tagStr = '<div class="'+target[0]+'">'
     tagStr += '<strong class="'+target[1]+'">'+target[3]+'</strong>'
     tagStr += '<div class="'+target[2]+'">'
@@ -89,8 +108,11 @@ socket.on('text message', function(data) {
     $('.view').scrollTop(
         $('.view').prop('scrollHeight'))
     return false;
+    
+    // 파일 있을때 
+    // ** 코드으
 })
-//
+
 // 상대 타이핑 알림
 socket.on('notice typing', function(data) {
     var typingNickname = data.user.nickname 

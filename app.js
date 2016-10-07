@@ -49,10 +49,10 @@ io.on('connection', function(socket) {
     // 아이디를 클라이언트들에게 전송
      io.emit('user list', {user: userInfo})
     
-    socket.on('text message', function(data) {
+    socket.on('message', function(data) {
         userInfo.users.forEach( function(value, index) {
             if(value.id === socket.id) {
-                io.emit('text message', {msg : data, user : value})
+                io.emit('message', {msg : data, user : value})
                 return false;
             }
         })
@@ -75,7 +75,8 @@ io.on('connection', function(socket) {
         // 중복 메소드 => 모듈화
     })
     ss(socket).on('file', function(stream, data) {
-        fs.createWriteStream(data.name)
+        
+        stream.pipe(fs.createWriteStream("file/"+data.name))
         return true;
     })
 })

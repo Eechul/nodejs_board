@@ -132,8 +132,20 @@
     <div class="chat_layout">
         <div class="chatting">
             <div class="view">
-            
-           
+             <div class="my_content">
+                <strong class="my_name">동동</strong>
+                <div class="my_message">
+                    <div class="image">
+                        <img src="public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
+                        <div class="file_download">
+                            <span><a href="#">다운로드</a></span>
+                        </div> 
+                    </div>
+                    <div class="message">
+                        안녀엉
+                    </div>
+                </div>
+            </div>
             </div>
             <div class="typingText">
                 <span class="nickname">경고창 및 타이핑 문</span>
@@ -149,7 +161,7 @@
             <div class="input">
                 <button id="plusMenu" class="sub_function" >+</button>
                 <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkEnter()" onkeydown="checkKeyboard()"></textarea>
-                <span id="sendMsg" class="text_submit" onClick="sendMessage"  style="cursor: pointer">전송</spans>
+                <span id="sendMsg" class="text_submit" onClick="sendMessage"  style="cursor: pointer">Enter</span>
             </div>
             <div class="function_list" style="display: none;">
                 <span class="list_title">부가기능</span>
@@ -176,6 +188,9 @@
     <script type="text/javascript" src="../js/socket.io-stream.js"></script>
         <script type="text/javascript" src="../js/chatClient.js"></script>
     <script>
+        var file;
+        var file_size = 0
+        var blobStream
         $("#plusMenu").click(function () {
            $(".function_list").toggle(0.1, function() {
                var menuText = $("#plusMenu").text()
@@ -190,28 +205,8 @@
             $(".function_list").css("display","none");
             $("#plusMenu").text("+")
         })
-        var sendMessage = $(".text_submit").click(function () {
-            var text = $(".text_input").text()
-            if(!text) {
-                // 텍스트 미전송
-            } else {
-                // 텍스트 전송
-            }
-//            $('.view').append(  
-//                                  `<div class="my_content">
-//                    <strong class="my_name">동동</strong>
-//                    <div class="file">
-//                        <div class="file_download">
-//                            <a href="#">
-//                                <i class="fa fa-file-o fa-5x" aria-hidden="true"></i>
-//                                다운로드
-//                            </a>
-//                        </div> 
-//                    </div>
-//                </div>`
-//                                  )
         $('.view').scrollTop($('.view').prop('scrollHeight'))
-        });
+        
 
         var sendFileBox = function(selectId) {
             var tagId = "#"+selectId
@@ -225,10 +220,11 @@
         
         function getPath(obj) {
             obj.select();
-            var fileName = obj.files[0].name;
+            file = obj.files[0]
+            var fileName = file.name;
             var fReader = new FileReader()
             // FileReader 객체는 IE 10부터 지원.. 단점!
-            fReader.readAsDataURL(obj.files[0]);
+            fReader.readAsDataURL(file);
             fReader.onloadend = function(event) {
                 var img = document.getElementById("uploadFile")
                 img.src = event.target.result
@@ -236,9 +232,12 @@
                 $(".fileUploadName").text(fileName)
                 $(".fileUploadView").css("display", "block")   
             }
-            console.log(obj.files[0])
+            console.log(file)
             var stream = ss.createStream()
-            ss(socket).emit('file', stream, {name: fileName, size: obj.files[0].size})
+            ss(socket).emit('file', stream, {name: fileName, size: file.size})
+            ss.createBlobReadStream(file).pipe(stream)
+            blobStream = ss.createBlobReadStream(file)
+            
         }
         $("#cancleUpload").click( function() {
             // 취소버튼 클릭 시, 이미지 관련 버튼, 태그 숨기거나 비워둠
@@ -248,6 +247,11 @@
             img.alt = ""
             $("#fileUploadName").text("")
         })
+        
+//        blobStream.on('data', function(chunk) {
+//            file_size += chunk.length
+//            console.log(Math.floor(file_size / file.size*100)+" %")
+//        })
     </script>
 </body>
 </html>
