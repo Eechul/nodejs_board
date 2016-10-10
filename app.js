@@ -77,7 +77,7 @@ io.on('connection', function(socket) {
     ss(socket).on('file', function(stream, data) {
         
         stream.pipe(fs.createWriteStream("file/"+data.name))
-        return true;
+
     })
 })
 

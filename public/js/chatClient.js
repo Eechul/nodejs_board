@@ -7,38 +7,39 @@ var user = {
 var user_list
 
 var inputMsg = $("#inputMsg")
-var fileUploadView = $(".fileUploadView")
+var fileUploadBox = $(".fileUploadBox")
 // 엔터키 체크
 function checkEnter() {
     if(event.keyCode === 13) {
+        if(!fileUploadBox.is(":hidden")) {
+            console.log(fileInfo)
+            var storage_name = fileInfo.storage_name
+            var type = fileInfo.type
+            var size = fileInfo.size
+            fileInfo.fileObj.forEach( function(v, i) {
+                console.log("ccc",storage_name)
+                var stream = ss.createStream()
+                ss(socket).emit('file', stream, {name: storage_name[i], size: size[i] })
+                ss.createBlobReadStream(v).pipe(stream)
+                blobStream = ss.createBlobReadStream(v)
+            })
+        }
         if(inputMsg.val().length !== 1) {
-            if(!fileUploadView.is(":hidden")) {
-                // 보낼 파일이 있을때, 업로드 하려는 파일이름
-                // 예)dongChat_20161017_(고유코드).jpg
-                // 을 데이터에 실어 message socket에 보내기
-            } else {
                 socket.emit('message', inputMsg.val())
                 inputMsg.val("")
-            }
         } else {
-            if(!fileUploadView.is(":hidden")) {
-                // 보낼 파일이 있을때, 업로드 하려는 파일이름
-                // 예)dongChat_20161017_(고유코드).jpg
-                // 을 데이터에 실어 message socket에 보내기
-            } else {
-                 inputMsg.val("")
-                $(".nickname").text("텍스트를 입력해 주십시오")
-                $(".typingText").css("visibility", "visible")
-                $(".nickname").css("visibility", "visible")
-                setTimeout(function() {
-                    $(".typingText").css("visibility", "hidden")
-                    $(".nickname").css("visibility", "hidden")
-                }, 1000) // 모듈화
-            }
-        }
+            inputMsg.val("")
+            $(".nickname").text("텍스트를 입력해 주십시오")
+            $(".typingText").css("visibility", "visible")
+            $(".nickname").css("visibility", "visible")
+            setTimeout(function() {
+                $(".typingText").css("visibility", "hidden")
+                $(".nickname").css("visibility", "hidden")
+            }, 1000) // 모듈화
+        }     
+    }
         return ;
     }    
-}
 // 실시간 키보드 체크
 function checkKeyboard()  {
     // 입력 하면 바로바로 서버에 정보 전송

@@ -107,6 +107,9 @@
             border: 2.5px solid #0aa00a;
             box-shadow: 1px 1px 1px #0aa00a
         }
+        .fileUploadView {
+            display: inline-block;
+        }
         .you_content .receive_img {
             
             float: left;
@@ -116,7 +119,6 @@
         }
         .you_content .file_download {
             clear: both;
-/*            display: inline-block;*/
             
         }
         .typingText {
@@ -136,7 +138,7 @@
                 <strong class="my_name">동동</strong>
                 <div class="my_message">
                     <div class="image">
-                        <img src="public/img/Tulips.jpg" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
+                        <img src="" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
                         <div class="file_download">
                             <span><a href="#">다운로드</a></span>
                         </div> 
@@ -150,12 +152,7 @@
             <div class="typingText">
                 <span class="nickname">경고창 및 타이핑 문</span>
             </div>
-            <div class="fileUploadView" style="display: none;">
-                <div>
-                    <img src="" alt="" id="uploadFile" width="25%">
-                </div>
-                <div class="fileUploadName"></div>
-                <button id="cancleUpload">취소</button>
+            <div class="fileUploadBox" style="display: none;">
             </div>
            
             <div class="input">
@@ -167,11 +164,10 @@
                 <span class="list_title">부가기능</span>
                 <div class="sub_send">
                     <div>
-                        <input type="file" id="etc_file" accept=".hwp, .exel" onchange="sendFile('etc_file')" style="display:none;">
                         <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
                     </div>
                     <div>
-                        <input type="file" id="img_file" accept=".gif, .jpg, .png" onchange="javascript:getPath(this);" style="display:none;">
+                        <input type="file" id="img_file" multiple="multiple" accept=".gif, .jpg, .png" onchange="javascript:getPath(this);" style="display:none;">
                         <span id="img_send" class="object_send" onClick="sendFileBox('img_send')" style="cursor:pointer;">이미지 전송</span>
                     </div>
                 </div>
@@ -185,10 +181,18 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../js/socket.io-stream.js"></script>
-        <script type="text/javascript" src="../js/chatClient.js"></script>
+    <script type="text/javascript" src="../js/chatClient.js"></script>
     <script>
-        var file;
+        var files;
+        var fileInfo = {
+            fileObj : [],
+            origin_name : [],
+            storage_name : [],
+            type: [],
+            size : []
+        }
         var file_size = 0
         var blobStream
         $("#plusMenu").click(function () {
@@ -220,38 +224,59 @@
         
         function getPath(obj) {
             obj.select();
-            file = obj.files[0]
-            var fileName = file.name;
-            var fReader = new FileReader()
-            // FileReader 객체는 IE 10부터 지원.. 단점!
-            fReader.readAsDataURL(file);
-            fReader.onloadend = function(event) {
-                var img = document.getElementById("uploadFile")
-                img.src = event.target.result
-                img.alt = fileName
-                $(".fileUploadName").text(fileName)
-                $(".fileUploadView").css("display", "block")   
+            files = obj.files
+            for(var i=0; i<files.length; i++) {
+                fileInfo.fileObj[i] = files[i]
+                fileInfo.origin_name[i] = files[i].name
+                
+                fileInfo.type[i] = files[i].type
+                console.log(fileInfo.type[i])
+                fileInfo.storage_name[i] 
+                    = isFormatfileDate(
+                    new Date()
+                    )+"."+fileInfo.type[i].split("/")[1]
+                fileInfo.size[i] = files[i].size
             }
-            console.log(file)
-            var stream = ss.createStream()
-            ss(socket).emit('file', stream, {name: fileName, size: file.size})
-            ss.createBlobReadStream(file).pipe(stream)
-            blobStream = ss.createBlobReadStream(file)
             
+            // FileReader 객체는 IE 10부터 지원.. 단점!
+            fileInfo.fileObj.forEach( function(value, index) {
+                var fileOriginName = fileInfo.origin_name[index]
+                var fileType = fileInfo.type[index]
+                var fileStorage_name = fileInfo.storage_name[index]
+                var fileSize = fileInfo.size[index]
+                var fReader = new FileReader()
+                fReader.readAsDataURL(value);
+                fReader.onloadend = function(event) {
+                    var fileSrc = event.target.result;
+                    var fileId = 'uploadFile_'+index
+                    var fileNameId = "fileUploadName_"+index
+                    var fileCancleId = 'cancleUpload_'+index
+                    var fileTag = '<div class="fileUploadView">'
+                        fileTag += '<img src="'+fileSrc+'" alt="'+fileStorage_name+'" id="'
+                        fileTag += fileId+'" width="25%">'
+                        fileTag += '<div id="'+fileNameId+'"></div>'
+                        fileTag += '<button class="cancleUpload">취소</button>'
+                        fileTag += '</div>'
+                    $(".fileUploadBox").append(fileTag)
+                    $("#fileUploadName_"+index).text(fileOriginName)
+                    console.log('name', fileOriginName)
+                    $(".fileUploadBox").css("display", "block")   
+                } 
+            })       
         }
-        $("#cancleUpload").click( function() {
-            // 취소버튼 클릭 시, 이미지 관련 버튼, 태그 숨기거나 비워둠
-            $(".fileUploadView").css("display", "none")
-            var img = document.getElementById("uploadFile")
-            img.src = ""
-            img.alt = ""
-            $("#fileUploadName").text("")
+        $(".fileUploadBox").on("click", ".cancleUpload", function() {
+            var fileUploadView = $(this).parent();
+            var imgTag = fileUploadView.children()[0];
+            var storage_name = $(imgTag).attr("alt")
+            fileInfo.storage_name.forEach( function(v, i) {
+                if(v === storage_name) {
+                    fileInfo.storage_name.splice(i,1);
+                    console.log(fileInfo.storage_name)
+                    fileUploadView.remove(); 
+                    return ;
+                }
+            })
         })
-        
-//        blobStream.on('data', function(chunk) {
-//            file_size += chunk.length
-//            console.log(Math.floor(file_size / file.size*100)+" %")
-//        })
     </script>
 </body>
 </html>
