@@ -28,6 +28,7 @@
         }
         
         .chatting {
+            position: relative;
             margin: 0 auto;
             width: 700px;
             height: 1000px;
@@ -39,6 +40,7 @@
             box-shadow: 2px 1px 7px #3b5c07;
             clear: both;
             overflow: auto;
+            display: block;
         }
 
 
@@ -88,10 +90,18 @@
             height: 7.5%;
         }
         .user_list {
+/*
             float: right;
             margin-top: -500px;
             margin-right: 475px;
             height: 200px;
+*/
+            width: 100%;
+            text-align: center;
+            position: relative;
+            display: block;
+           
+            
         }
         .list_title {
             border-bottom: 1px solid black;
@@ -134,20 +144,12 @@
     <div class="chat_layout">
         <div class="chatting">
             <div class="view">
-             <div class="my_content">
-                <strong class="my_name">동동</strong>
-                <div class="my_message">
-                    <div class="image">
-                        <img src="" alt="(사진이름)" class="receive_img" width="30%" height="100px;">
-                        <div class="file_download">
-                            <span><a href="#">다운로드</a></span>
-                        </div> 
-                    </div>
-                    <div class="message">
-                        안녀엉
-                    </div>
-                </div>
+
             </div>
+            <div class="user_list">
+                <div class="list_title">유저리스트</div>
+                <ul class="list_item">
+                </ul>
             </div>
             <div class="typingText">
                 <span class="nickname">경고창 및 타이핑 문</span>
@@ -158,14 +160,18 @@
             <div class="input">
                 <button id="plusMenu" class="sub_function" >+</button>
                 <textarea id="inputMsg" class="text_input" style="height: 70px;" placeholder="텍스트를 입력해주십시오." onkeyup="checkEnter()" onkeydown="checkKeyboard()"></textarea>
-                <span id="sendMsg" class="text_submit" onClick="sendMessage"  style="cursor: pointer">Enter</span>
+                <span id="sendMsg" class="text_submit"   style="cursor: pointer">Enter</span>
             </div>
             <div class="function_list" style="display: none;">
                 <span class="list_title">부가기능</span>
                 <div class="sub_send">
+<!--
                     <div>
+                       <input type="file" id="etc_file" multiple="multiple" accept=".hwp, .xlsx" onchange="javascript:getPath(this);" style="display:none;">
                         <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
-                    </div>
+                    </div> 
+                    보류보류보류
+-->
                     <div>
                         <input type="file" id="img_file" multiple="multiple" accept=".gif, .jpg, .png" onchange="javascript:getPath(this);" style="display:none;">
                         <span id="img_send" class="object_send" onClick="sendFileBox('img_send')" style="cursor:pointer;">이미지 전송</span>
@@ -173,11 +179,6 @@
                 </div>
                 
             </div>
-        </div>
-        <div class="user_list">
-            <span class="list_title">유저리스트</span>
-            <ul class="list_item">
-            </ul>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -225,16 +226,17 @@
         function getPath(obj) {
             obj.select();
             files = obj.files
+            console.log('file', files)
             for(var i=0; i<files.length; i++) {
                 fileInfo.fileObj[i] = files[i]
                 fileInfo.origin_name[i] = files[i].name
                 
                 fileInfo.type[i] = files[i].type
-                console.log(fileInfo.type[i])
+                console.log('type check', fileInfo.type[i])
                 fileInfo.storage_name[i] 
-                    = isFormatfileDate(
-                    new Date()
-                    )+"."+fileInfo.type[i].split("/")[1]
+                    = isFormatfileDate(new Date())
+                    +isRandomNumber()+"."+fileInfo.type[i].split("/")[1]
+                console.log("date setting: ", fileInfo.storage_name[i])
                 fileInfo.size[i] = files[i].size
             }
             
@@ -252,9 +254,11 @@
                     var fileNameId = "fileUploadName_"+index
                     var fileCancleId = 'cancleUpload_'+index
                     var fileTag = '<div class="fileUploadView">'
+                    
                         fileTag += '<img src="'+fileSrc+'" alt="'+fileStorage_name+'" id="'
                         fileTag += fileId+'" width="25%">'
                         fileTag += '<div id="'+fileNameId+'"></div>'
+                        
                         fileTag += '<button class="cancleUpload">취소</button>'
                         fileTag += '</div>'
                     $(".fileUploadBox").append(fileTag)
@@ -272,6 +276,9 @@
                 if(v === storage_name) {
                     fileInfo.storage_name.splice(i,1);
                     console.log(fileInfo.storage_name)
+                    if(!i) {
+                        $(".fileUploadBox").css("display", "none")
+                    } 
                     fileUploadView.remove(); 
                     return ;
                 }

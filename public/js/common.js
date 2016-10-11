@@ -13,3 +13,15 @@ var isFormatfileDate = function(d) {
     console.log("sumString", sumString)
     return sumString
 }  
+
+var isRandomNumber = function() {
+    var max = 5;
+    var RandomNumber = "";
+    
+    for(var i=0; i<max; i++) {
+        var random = (Math.random()*10)
+        random = Math.floor(random);
+        RandomNumber += ""+random
+    }
+    return RandomNumber
+}  

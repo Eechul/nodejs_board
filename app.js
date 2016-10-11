@@ -50,12 +50,19 @@ io.on('connection', function(socket) {
      io.emit('user list', {user: userInfo})
     
     socket.on('message', function(data) {
-        userInfo.users.forEach( function(value, index) {
+          userInfo.users.forEach( function(value, index) {
             if(value.id === socket.id) {
-                io.emit('message', {msg : data, user : value})
-                return false;
+                if(typeof data === "object") {
+                    var msgData = data.msgData;
+                    io.emit('message', {msg : msgData, user : value})
+                    return false;
+                } else {
+                    io.emit('message', {msg : data, user : value})
+                    return false;
+                }
             }
-        })
+          }) 
+          return ;
     })
     
     socket.on('keyboard typing', function(data) {
@@ -75,9 +82,7 @@ io.on('connection', function(socket) {
         // 중복 메소드 => 모듈화
     })
     ss(socket).on('file', function(stream, data) {
-        
-        stream.pipe(fs.createWriteStream("file/"+data.name))
-
+       stream.pipe(fs.createWriteStream("public/file/"+data.name))
     })
 })
 
