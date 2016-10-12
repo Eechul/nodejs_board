@@ -284,6 +284,23 @@
                 }
             })
         })
+        $(".view").on("click", ".abcd", function() {
+            var downloadFileName = $(this).siblings()[0].textContent
+            var url = "/chat/download"
+            var param="fname="+downloadFileName
+            
+            $.ajax ({
+                type: 'POST',
+                url: url,
+                data: param,
+                success: function(args) {
+                    console.log('ss')
+                }
+            })
+            
+        })
+            
+    
     </script>
 </body>
 </html>

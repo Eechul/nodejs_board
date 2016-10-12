@@ -23,7 +23,7 @@ function msgDataAndViewInit() {
 }
 // 엔터키 체크
 function checkEnter() {
-    if(event.keyCode === 13 || event.click) {
+    if(event.keyCode === 13) {
         if(!fileUploadBox.is(":hidden")) {
             var storage_name = fileInfo.storage_name
             var type = fileInfo.type
@@ -81,7 +81,7 @@ function checkKeyboard()  {
 }
 
 $("#sendMsg").click(function() {   
-    checkEnter();
+//    checkEnter();
 //    console.log(inputMsg.val());
 //    if(inputMsg.val().length !== 0) {
 //            socket.emit('message', inputMsg.val())
@@ -145,13 +145,16 @@ socket.on('message', function(data) {
     tagStr += '<div class="'+target[2]+'">'
     if(target[4]) {
         file.forEach( function(v, i) {
+            var downloadId = isRandomNumber()
             var fileName = v
              console.log("4")
             var fileSrc = "./file/"+fileName
             tagStr +=  '<div class="image">'
             tagStr += '<img src="'+fileSrc+'" alt="'+fileName+'" class="receive_img" width="30%" height="100px;">'
             tagStr += '<div class="file_download">'
-            tagStr += '<span><a href="#">'+fileName+'</a></span>'
+            tagStr += '<span class="downloadLink">'
+            tagStr += '<strong>'+fileName+'</strong>'
+            tagStr +='<input type="button" class="abcd" value="다운로드"></span>'
             tagStr += '</div></div>'
         })
         

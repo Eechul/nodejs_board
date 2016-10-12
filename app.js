@@ -91,8 +91,10 @@ app.get('/', routes.board.index);
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
 
+
 // 채팅
 app.get('/chat', routes.chatting.index)
+app.post('/chat/download', routes.chatting.download)
 
 // 인스타 테스트
 app.get('/instar', routes.instar.index);
