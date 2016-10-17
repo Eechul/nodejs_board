@@ -50,7 +50,7 @@
             border: 1px solid #a0d64b;
             padding: 50px;
             height: 800px;
-            box-shadow: 2px 1px 7px #3b5c07;
+            box-shadow: 2px 1px 7px;
             clear: both;
             overflow: auto;
             display: block;
@@ -59,11 +59,6 @@
         nav {
             padding: 0.5
         }
-/*
-        nav a:hover {
-            
-        }
-*/
         #menuBox {
             position: absolute;
             display: none;
@@ -83,7 +78,6 @@
         }
         .you_content, .my_content {
             margin: 5px;
-/*            border-bottom: 3px solid black;*/
             padding-bottom: 7px;
         }
         .my_content {
@@ -93,8 +87,13 @@
             display: inline-block;
         }
         .you_message .message, .my_message .message {
+            min-width: 150px;
+            max-width: 250px;
+            text-align: left;
             padding: 7px;
-            border: 1px solid #0aa00a;
+            border: 5px solid #0aa00a;
+            box-shadow: 1px 1px 1px;
+            
         }
         .you_message .message {
              border-radius: 15px 15px 15px 1px;
@@ -115,18 +114,10 @@
             height: 7.5%;
         }
         .user_list {
-/*
-            float: right;
-            margin-top: -500px;
-            margin-right: 475px;
-            height: 200px;
-*/
             width: 100%;
             text-align: center;
             position: relative;
             display: block;
-           
-            
         }
         .list_title {
             border-bottom: 1px solid black;
