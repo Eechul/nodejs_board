@@ -25,3 +25,4 @@ var isRandomNumber = function() {
     }
     return RandomNumber
 }  
+

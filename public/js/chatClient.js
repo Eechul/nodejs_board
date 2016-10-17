@@ -57,7 +57,8 @@ function checkEnter() {
             })
             msgDataAndViewInit();
         } else {
-            if(inputMsg.val().length !== 1) {
+            console.log('inputMsg', inputMsg.val().charAt('\n'))
+            if(inputMsg.val().charAt() !== '\n') {
                 socket.emit('message', inputMsg.val())
                 inputMsg.val("")
             } else {
@@ -119,11 +120,12 @@ socket.on('user list', function(data) {
     return false;
 })
 
+// 메세지 서버를 통해 받는 경우,
 socket.on('message', function(data) {
     var msg, 
-        file
-    var receive_user_info = data.user
-    var target
+        file,
+        receive_user_info = data.user,
+        target
     if(receive_user_info.id === user.id) {
         target = ["my_content", "my_name", "my_message", user.nickname]
     } else {
@@ -147,29 +149,34 @@ socket.on('message', function(data) {
         file.forEach( function(v, i) {
             var downloadId = isRandomNumber()
             var fileName = v
-             console.log("4")
+             console.log(fileName.split('.'))
+            
             var fileSrc = "./file/"+fileName
             tagStr +=  '<div class="image">'
             tagStr += '<img src="'+fileSrc+'" alt="'+fileName+'" class="receive_img" width="30%" height="100px;">'
             tagStr += '<div class="file_download">'
             tagStr += '<span class="downloadLink">'
-            tagStr += '<strong>'+fileName+'</strong>'
-            tagStr +='<input type="button" class="abcd" value="다운로드"></span>'
+            tagStr += '<a href="/chat/download/'+fileName.split(".")[0]
+            tagStr += "/"+fileName.split('.')[1]+'" class="abcd" >'
+            tagStr += '<strong>'+fileName+'</strong></a></span>'
             tagStr += '</div></div>'
+            console.log(tagStr);
         })
         
     }
-    console.log('msg',typeof msg)
-    tagStr += '<div class="message">'
-    tagStr += ""+msg
-    tagStr += '</div></div></div>'
-    $('.view').append(tagStr) 
+    if(msg !== "\n") {
+        tagStr += '<div class="message">'
+        tagStr += ""+msg
+        tagStr += '</div></div></div>'
+        $('.view').append(tagStr)   
+    } else {
+        tagStr += '</div></div>'
+        $('.view').append(tagStr)   
+    }
+    
     $('.view').scrollTop(
         $('.view').prop('scrollHeight'))
     return false;
-    
-    // 파일 있을때 
-    // ** 코드으
 })
 
 // 상대 타이핑 알림

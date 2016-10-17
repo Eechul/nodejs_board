@@ -8,18 +8,23 @@ exports.index = function(req, res) {
 }
 
 exports.download = function(req, res) {
-    var fname =req.body.fname;
-    console.log(fname)
-    var paths = './file/'+fname
-    mimetype = mime.lookup(paths)
+    var filename =req.params.fname;
+    var typename = req.params.tname
+    
+    filename += "."+typename
+    console.log(filename)
+    var paths = 'D:/nodejs_board/public/file/'+filename
+    
+    var mimetype = mime.lookup(paths)
+    console.log(mimetype);
     console.log(paths)
     console.log(mimetype)
-    
-    res.setHeader('Content-disposition', 'attachment; filename='+paths);
-    console.log('2')
-    res.setHeader('Content-type', mimetype)
-    console.log('3')
-    var filestream = fs.createWriteStream('/file/'+fname);
-    filestream.pipe(res)
-    console.log('4')
+    res.download(paths);
+//    res.setHeader('Content-disposition', 'attachment; filename='+paths);
+//    console.log('2')
+//    res.setHeader('Content-type', mimetype)
+//    console.log('3')
+//    var filestream = fs.createWriteStream(paths);
+//    filestream.pipe(res)
+//    res.end();
 }

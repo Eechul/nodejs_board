@@ -3,11 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <mete name="viewport", content="width-device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/font/font-awesome/css/font-awesome.min.css">
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <style>
         * {
             box-sizing: border-box;
+        }
+        body {
+            background-color : rgba(12, 149, 12, 0.3);
+            -ms-background-size: cover;
+            -o-background-size: cover;
+            -moz-background-size: cover;
+            -webkit-background-size: cover;
+            background-size: cover;
+            opacity: 1;
+            
+        }
+        .message {
+            color : rgb(224, 142, 10)
         }
         a {
             text-decoration: none;
@@ -42,8 +55,20 @@
             overflow: auto;
             display: block;
         }
-
-
+    
+        nav {
+            padding: 0.5
+        }
+/*
+        nav a:hover {
+            
+        }
+*/
+        #menuBox {
+            position: absolute;
+            display: none;
+        }
+    
         .input .sub_function{
             margin-top: 45px;
             margin-right: 2px;
@@ -143,14 +168,19 @@
 <body>
     <div class="chat_layout">
         <div class="chatting">
+           <nav>
+                <i class="fa fa-bars fa-2x" id="slideMenu" aria-hidden="true"></i>
+                <div id="menuBox">
+                    <div class="user_list">
+                    <div class="list_title">유저리스트</div>
+                    <ul class="list_item"></ul>
+                </div>
+                </div>
+           </nav>
             <div class="view">
 
             </div>
-            <div class="user_list">
-                <div class="list_title">유저리스트</div>
-                <ul class="list_item">
-                </ul>
-            </div>
+           
             <div class="typingText">
                 <span class="nickname">경고창 및 타이핑 문</span>
             </div>
@@ -284,23 +314,12 @@
                 }
             })
         })
-        $(".view").on("click", ".abcd", function() {
-            var downloadFileName = $(this).siblings()[0].textContent
-            var url = "/chat/download"
-            var param="fname="+downloadFileName
             
-            $.ajax ({
-                type: 'POST',
-                url: url,
-                data: param,
-                success: function(args) {
-                    console.log('ss')
-                }
-            })
-            
-        })
-            
-    
+        $('#slideMenu').hover(function() {
+           $('#menuBox').css('display', 'block') 
+        }, function() {
+            $('#menuBox').css('display', 'none') 
+        });
     </script>
 </body>
 </html>
