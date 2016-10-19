@@ -17,7 +17,6 @@
             -webkit-background-size: cover;
             background-size: cover;
             opacity: 1;
-            
         }
         .message {
             color : rgb(224, 142, 10)
@@ -186,17 +185,15 @@
             <div class="function_list" style="display: none;">
                 <span class="list_title">부가기능</span>
                 <div class="sub_send">
-<!--
-                    <div>
-                       <input type="file" id="etc_file" multiple="multiple" accept=".hwp, .xlsx" onchange="javascript:getPath(this);" style="display:none;">
-                        <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
-                    </div> 
-                    보류보류보류
--->
                     <div>
                         <input type="file" id="img_file" multiple="multiple" accept=".gif, .jpg, .png" onchange="javascript:getPath(this);" style="display:none;">
                         <span id="img_send" class="object_send" onClick="sendFileBox('img_send')" style="cursor:pointer;">이미지 전송</span>
                     </div>
+                    <div>
+                       <input type="file" id="etc_file" multiple="multiple" onchange="javascript:getPath(this);" style="display:none;">
+                        <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
+                    </div> 
+
                 </div>
                 
             </div>
@@ -215,6 +212,7 @@
             type: [],
             size : []
         }
+      
         var file_size = 0
         var blobStream
         $("#plusMenu").click(function () {
@@ -227,6 +225,7 @@
                }
            })
         })
+        
         $(".object_send").click(function () {
             $(".function_list").css("display","none");
             $("#plusMenu").text("+")
@@ -244,22 +243,45 @@
             console.log(document.getElementById(selectId).value)
         }
         
+          /*
+        <div>
+       <input type="file" id="etc_file" multiple="multiple" onchange="javascript:getPath(this);" style="display:none;">
+        <span id="file_send" class="object_send" onClick="sendFileBox('file_send')" style="cursor:pointer;">파일 전송</span>
+    </div> 
+        */
+        function getFileType(fileName) {
+            var fileType 
+            return fileType = fileName.split(".")[(fileName.split(".").length)-1];
+        } 
+        // getPath() 시작
         function getPath(obj) {
             obj.select();
             files = obj.files
-            console.log('file', files)
+            //
             for(var i=0; i<files.length; i++) {
+                var fileType = getFileType(files[i].name)
+                // file객체 지정
                 fileInfo.fileObj[i] = files[i]
+                // file 오리지널 이름 지정
                 fileInfo.origin_name[i] = files[i].name
-                
-                fileInfo.type[i] = files[i].type
-                console.log('type check', fileInfo.type[i])
+                console.log(files[i].name)
+                // file 타입(확장자) 지정
+                fileInfo.type[i] = fileType
+                // file.Type 바꾸기/ 이유=> 다른파일들은 확장자(.xx)가 
+                // 안나오는 문제 발생
+                //console.log('type check', fileInfo.type[i])
+
+                // 저장파일이름 지정: 어플이름_년도월일시분초밀리초
                 fileInfo.storage_name[i] 
                     = isFormatfileDate(new Date())
-                    +isRandomNumber()+"."+fileInfo.type[i].split("/")[1]
+                    +isRandomNumber()+"."+fileType
+                    // type[i].split("/")[1] -> 지우기. 아예 이름만 놓고
+                    // 파일 풀네임을 보거나 다운로드 받을때 합치는게 좋을듯.
+
                 console.log("date setting: ", fileInfo.storage_name[i])
+                // 파일 사이즈 지정
                 fileInfo.size[i] = files[i].size
-            }
+            } // files for문 끝
             
             // FileReader 객체는 IE 10부터 지원.. 단점!
             fileInfo.fileObj.forEach( function(value, index) {
@@ -267,6 +289,11 @@
                 var fileType = fileInfo.type[index]
                 var fileStorage_name = fileInfo.storage_name[index]
                 var fileSize = fileInfo.size[index]
+                
+                // FileReader() 익스 10 이하 적용 x 해결책 필요
+                
+                // 이미지를 전송했을때는 미리보기 지원해야 하므로 밑의 fReader사용
+                // 파일을 전송할때는 대체이미지를 적용할 것이므로 공통적인 태그는 같이 묶기.
                 var fReader = new FileReader()
                 fReader.readAsDataURL(value);
                 fReader.onloadend = function(event) {
@@ -275,11 +302,11 @@
                     var fileNameId = "fileUploadName_"+index
                     var fileCancleId = 'cancleUpload_'+index
                     var fileTag = '<div class="fileUploadView">'
-                    
-                        fileTag += '<img src="'+fileSrc+'" alt="'+fileStorage_name+'" id="'
-                        fileTag += fileId+'" width="25%">'
+                        if(fileType == 'gif' || fileType == 'jpg' || fileType == 'png') {
+                            fileTag += '<img src="'+fileSrc+'" alt="'+fileStorage_name+'"'
+                            fileTag += ' id="'+fileId+'" width="25%">'
+                        }
                         fileTag += '<div id="'+fileNameId+'"></div>'
-                        
                         fileTag += '<button class="cancleUpload">취소</button>'
                         fileTag += '</div>'
                     $(".fileUploadBox").append(fileTag)
@@ -287,8 +314,10 @@
                     console.log('name', fileOriginName)
                     $(".fileUploadBox").css("display", "block")   
                 } 
-            })       
-        }
+            }) //  fileInfo.fileObj.forEach 끝
+        } // getPath() 끝
+
+        // fileUploadBox 취소버튼 살리기
         $(".fileUploadBox").on("click", ".cancleUpload", function() {
             var fileUploadView = $(this).parent();
             var imgTag = fileUploadView.children()[0];
@@ -304,13 +333,14 @@
                     return ;
                 }
             })
-        })
+        }) // fileUploadBox 취소버튼 살리기 끝
             
+        // 사이드메뉴 마우스 오버 시, 나타나게하기
         $('#slideMenu').hover(function() {
            $('#menuBox').css('display', 'block') 
         }, function() {
             $('#menuBox').css('display', 'none') 
-        });
+        }); // // 사이드메뉴 마우스 오버 시, 나타나게하기 끝
     </script>
 </body>
 </html>

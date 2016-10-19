@@ -59,11 +59,13 @@ io.on('connection', function(socket) {
                 // 메세지가 파일일 경우.
                 if(typeof data === "object") {
                     var msgData = data.msgData;
+                    console.log("msgData", msgData)
                     io.emit('message', {msg : msgData, user : value})
                     return false;
                 } 
                 // 메세지가 text일 경우
                 else {
+                    //console.log("msgData", msgData)
                     io.emit('message', {msg : data, user : value})
                     return false;
                 }

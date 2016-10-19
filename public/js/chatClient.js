@@ -45,10 +45,10 @@ function checkEnter() {
                     progress_size += chunk.length;
                     var per = Math.floor(progress_size / size[i] * 100)
                     if(per == 100) {
-                        console.log(upload_count)
                         upload_count += 1;
                         if(upload_count === storage_name.length) {
                             msgData.file = storage_name
+                            msgData.type = type
                             msgData.message = textMsg
                             socket.emit('message', {msgData: msgData})
                         }
@@ -145,21 +145,35 @@ socket.on('message', function(data) {
     var tagStr = '<div class="'+target[0]+'">'
     tagStr += '<strong class="'+target[1]+'">'+target[3]+'</strong>'
     tagStr += '<div class="'+target[2]+'">'
+    
     if(target[4]) {
         file.forEach( function(v, i) {
             var downloadId = isRandomNumber()
             var fileName = v
-             console.log(fileName.split('.'))
+             console.log("fileName", fileName)
             
+             // 이미지의 경우 파일경로 필요하지만, 기본 파일은 대체이미지 필요. 
+             // img 외에 다른 공통태그 묶기
             var fileSrc = "./file/"+fileName
-            tagStr +=  '<div class="image">'
-            tagStr += '<img src="'+fileSrc+'" alt="'+fileName+'" class="receive_img" width="30%" height="100px;">'
+            console.log("fileName.type", fileName.type)
+            if(fileName.type =='gif' || fileName.type == 'jpg' 
+                || fileName.type == 'png' ) {
+                    tagStr +=  '<div class="image">'
+                    tagStr += '<img src="'+fileSrc+'" alt="'+fileName+'" class="receive_img" width="30%" height="100px;">'
+             } else {
+                tagStr +=  '<div class="file">'
+                tagStr += '<i class="fa fa-file-text-o fa-5x" aria-hidden="true"></i>'
+             }
             tagStr += '<div class="file_download">'
             tagStr += '<span class="downloadLink">'
             tagStr += '<a href="/chat/download/'+fileName.split(".")[0]
+            // fileName.split(".")[1] -> storage_name에 확장자를 뺸 파일이름 들어있음. 자를필요 x
             tagStr += "/"+fileName.split('.')[1]+'" class="abcd" >'
+            // fileName.split(".")[1] -> 전송자가 fileType 안에 확장자 가지고있음. 자를 필요 x
             tagStr += '<strong>'+fileName+'</strong></a></span>'
             tagStr += '</div></div>'
+            // </div> 를 지울방법..? 
+            // 1. 태그 삽입을 다른방식으로
             console.log(tagStr);
         })
         
@@ -194,7 +208,7 @@ socket.on('notice typing', function(data) {
             $(".nickname").css("visibility", "hidden")
         }, 850) // 모듈화
     }
-})
+}) // // 상대 타이핑 알림 끝
 
 
 socket.emit('disconnect')
