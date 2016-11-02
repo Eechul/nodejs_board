@@ -2,45 +2,139 @@
 <html lang="kr">
 <head>
     <meta charset="UTF-8">
-    <mete name="viewport", content="width-device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/font/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../public/css/style.css">
+    <style>
+        .board {
+            margin : 0 auto;
+            margin-top: 300px;
+            width: 830px;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:link, a:visited {
+            color: black;
+        }
+
+        .board .page_btn {
+            background-color: #B71600;
+            border-radius: 25%;
+            color: white;
+            box-shadow: 1px 2px 1px;
+        }
+
+        table {
+            border-collapse : collapse;
+        }
+        table thead {
+
+        }
+        tr th {
+            background-color: #B71600;
+            color : white;
+        }
+        tr th:nth-child(1), tr td:nth-child(1){
+            width: 65px;
+        }
+        tr th:nth-child(2), tr td:nth-child(2){
+            width: 360px;
+        }
+        tr th:nth-child(4), tr td:nth-child(4) {
+            width:200px;
+        }
+        tr td:nth-child(2) {
+            text-align: left;
+        }
+        tr td {
+            text-align: center;
+        }
+        tr td:nth-child(5),  tr td:nth-child(6){
+            text-align: right;
+        }
+        .board tr:nth-child(odd) {
+            background-color: #EAEAEA;
+        }
+        tfoot tr td {
+            background-color: white;
+        }
+        tfoot tr:nth-child(1) td {
+            text-align: right;
+        }
+
+    </style>
 </head>
 <body>
-    <h2>
-        <a href="/board"> Welcome, board page!</a>
-    </h2>
-    
-    <div class="panel">
-        <ul class="list-goup">
-            <li class="list-goup-item">
-                <div class="list-title">
-                    <div class="list-number">
-                    #00001
-                    </div>
-                    <h5>제목 </h5>
-                </div>
-                <div class="list-summary">
-                     댓글수, 좋아요수, 히트수
-                </div>
-                <div class="list-author">
-                    프로필(아이디)및날짜
-                </div>
-            </li>
-            <li class="list-goup-item">
-                <div class="list-title">
-                    <div class="list-number">
-                        #00002
-                    </div>
-                </div>
-                <div class="list-summary">
-                    댓글수, 좋아요수, 히트수
-                </div>
-                <div class="list-author">
-                    프로필(아이디)및날짜
-                </div>
-            </li>
-        </ul>
+    <div class="">
+        <table class="board">
+
+            <!-- 칼럼 속성 부분 -->
+            <thead width="100%">
+                <tr class="col_attr">
+                    <th scope="col">글번호</th>
+                    <th class="attr_title" scope="col">제목</th>
+                    <th scope="col">작성자</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">좋아요</th>
+                    <th scope="col">조회수</th>
+                </tr>
+            </thead>
+            <!-- // 칼럼 속성 부분  끝-->
+            <tbody>
+                <tr>
+                    <td >0001</td>
+                    <td>dsadasdasd</td>
+                    <td>dsadasdas</td>
+                    <td>2016-11-02 16:02:22</td>
+                    <td>120</td>
+                    <td>221</td>
+                </tr>
+
+                <tr>
+                    <td >0002</td>
+                    <td>dsadasdasd</td>
+                    <td>dsadasdas</td>
+                    <td>2016-11-02 16:02:22</td>
+                    <td>120</td>
+                    <td>221</td>
+                </tr>
+
+                <tr>
+                    <td >0003</td>
+                    <td>dsadasdasd</td>
+                    <td>dsadasdas</td>
+                    <td>2016-11-02 16:02:22</td>
+                    <td>120</td>
+                    <td>221</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <label for="search">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </label>
+                        <input type="text" name="search" value=""/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="6">
+                        <a class="page_btn" href="#"><<</a>
+                        <a class="page_btn" href="#"><</a>
+                        <a class="page_btn" href="#">1</a>
+                        <a class="page_btn" href="#">2</a>
+                        <a class="page_btn" href="#">3</a>
+                        <a class="page_btn" href="#">4</a>
+                        <a class="page_btn" href="#">></a>
+                        <a class="page_btn" href="#">>></a>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+
     </div>
+
 </body>
 </html>
-

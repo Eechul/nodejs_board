@@ -4,19 +4,20 @@ var mysql = require('../config/db/mysql'), // 디비 모듈화
 
 // 이것만 되는 상태. connection pool 시험작업 완료
 exports.index = function (req, res) {
-    var sql= 'select * from board_tb';
-        pool.getConnection(function(err, conn) {
-            conn.query(sql, function(err, boards, fields) {
-                if(err) {
-                    console.log(err);
-                    res.status(500).send('Internal Server Error');
-                } else {      
-                    console.log(boards)
-                    res.send(boards)
-                }
-                conn.release() 
-            })
-        })
+    // var sql= 'select * from board_tb';
+    //     pool.getConnection(function(err, conn) {
+    //         conn.query(sql, function(err, boards, fields) {
+    //             if(err) {
+    //                 console.log(err);
+    //                 res.status(500).send('Internal Server Error');
+    //             } else {
+    //                 console.log(boards)
+    //                 res.send(boards)
+    //             }
+    //             conn.release()
+    //         })
+    //     })
+    res.render('public/view');
 }
 
 
