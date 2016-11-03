@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../public/font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../public/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        .board_add {
+            margin : 0 auto;
+            margin-top: 50px;
+            padding : 50px;
+            max-width: 830px;
+            min-width: 530px;
+            /*background-color: #8dcca9;*/
+            border-radius: 10px;
+        }
+        .numberBox, .submary, .commentCountBox, .viewCountBox, .comment {
+            display: inline-block;
+            padding: 1px;
+        }
+        .commentBox .comment {
+            width: 100%;
+            border : 2px solid #EAEAEA;
+            outline: 0px;
+            background-color: #8dcca9;
+            border-radius: 10px;
+        }
+        .commentBox .comment:focus {
+            border: solid 2px #8DB6A9;
+        }
+        .commentList {
+            text-align: center;
+            padding: 5px;
+        }
+        /*.commentBox .comment{
+            padding-top: 10px:
+        }*/
+        .submary, .likeBox{
+            clear:both;
+            float:right;
+        }
+        .titleBox, .authorBox, .contentBox {
+            clear:both;
+            padding-bottom: 10px;
+        }
+        .titleBox label, .authorBox label, .contentBox label {
+            /*display: block;*/
+        }
+        .titleBox input, .authorBox input {
+            height: 2rem;
+        }
+        .titleBox input, .authorBox input, .contentBox textarea {
+            border : 1px solid #EAEAEA;
+            outline: 0px;
+            background-color: #8dcca9;
+            border-radius: 10px;
+            width: 100%;
+
+        }
+        .likeBox .likeCount {
+            display: inline-block;
+            font-size: 2rem;
+            text-align: center;
+            width: 80px;
+        }
+
+        .titleBox input:focus, .authorBox input:focus, .contentBox textarea:focus {
+            border: solid 3px #8DB6A9;
+        }
+        .contentBox textarea {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .submit_btn {
+            /*appearance : none;*/
+            border : 0;
+            border-radius: 5px;
+            width: 100%;
+            height: 2rem;
+            cursor : pointer;
+        }
+        .submit_btn:hover {
+            color : #4948FF;
+        }
+
+        #like_btn {
+            cursor: pointer;
+            /*color: rgb(88, 144, 255);*/
+            /*클릭 되었을때 위의 컬러로 적용*/
+            padding: 10px;
+
+        }
+
+        .commentInfo {
+            text-align: right;
+            padding: 3px;
+        }
+        .commentInfo input[type="text"] {
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="">
+        <div class="board_add">
+            <form class="" action="index.html" method="post">
+                <div class="board_header">
+                    <!-- 번호 -->
+                    <div class="numberBox">
+                        <span class="boardNumber">0001</label>
+                    </div>
+
+                    <!-- 작성자 -->
+                    <div class="authorBox">
+                        : <span>이동철</span>
+                    </div>
+
+                    <div class="submary">
+                        <!-- 댓글수 -->
+                        <div class="commentCountBox">
+                            <i class="fa fa-comment-o" aria-hidden="true"></i>
+                            <span class="commentCount">0</label>
+                        </div>
+                        <!-- 조회수 -->
+                        <div class="viewCountBox">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                            <span class="viewCount">0</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- 좋아요 -->
+                <div class="likeBox">
+                        <i class="fa fa-thumbs-up fa-5x" aria-hidden="true" id="like_btn"></i>
+                    <span class="likeCount">0</label>
+                </div>
+                <!-- 제목 -->
+                <div class="titleBox">
+                    <h3>제목인데 뭥</h3>
+                </div>
+
+                <!-- 내용 -->
+                <div class="contentBox">
+                    <div class="content">
+                        <p>
+                            나는 동철이다 그러므로 나는동철임니다 가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다
+                        </p>
+                        <p>
+                            유저는 띄어쓰기를(\n) 할때마다 p 태그가 생성됩니다
+                        </p>
+                    </div>
+                </div>
+                <hr/>
+                <div class="commentView">
+                    <label for="">댓글</label>
+                    <!-- <div class="commentList">
+                        <span>댓글이 존재하지 않습니다.</span>
+                    </div> -->
+                    <hr/>
+                </div>
+                <div class="commentBox">
+                    <div class="commentInfo">
+                        <label for="commentName">name : </label>
+                        <input type="text" id="commentName" name="commentName" value=""/>
+                        <label for="commentPassword">password : </label>
+                        <input type="text" id="commentPassword" name="commentPassword" value=""/>
+                    </div>
+                    <textarea id="comment" class="comment" name="name" rows="8"\></textarea>
+
+
+                </div>
+                <!-- submit button  -->
+                <div class="">
+                    <input  class="submit_btn" value="쓰기" type="submit">
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

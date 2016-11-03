@@ -12,26 +12,25 @@
         }
         a {
             text-decoration: none;
+            padding: 2px;
         }
         a:link, a:visited {
             color: black;
         }
 
-        .board .page_btn {
-            background-color: #B71600;
-            border-radius: 25%;
-            color: white;
-            box-shadow: 1px 2px 1px;
+        .board .page_btn, .board .add_btn {
+            display: inline-block;
+            color: #8dcca9;
         }
 
         table {
             border-collapse : collapse;
         }
-        table thead {
-
+        table tr td{
+            padding: 3px;
         }
         tr th {
-            background-color: #B71600;
+            background-color: #8dcca9;
             color : white;
         }
         tr th:nth-child(1), tr td:nth-child(1){
@@ -43,7 +42,7 @@
         tr th:nth-child(4), tr td:nth-child(4) {
             width:200px;
         }
-        tr td:nth-child(2) {
+        tbody tr td:nth-child(2) {
             text-align: left;
         }
         tr td {
@@ -58,8 +57,24 @@
         tfoot tr td {
             background-color: white;
         }
-        tfoot tr:nth-child(1) td {
+        tfoot .addColumn {
+            text-align: left;
+        }
+        .add_btn:hover, .page_btn:hover {
+            border-bottom: 2px solid #8dcca9;
+
+        }
+
+        tfoot .searchColumn {
             text-align: right;
+        }
+        tfoot .searchColumn input[name=search] {
+            outline: none;
+
+        }
+
+        tfoot .searchColumn input[name=search]:focus {
+            border:2px solid #8dcca9;
         }
 
     </style>
@@ -110,24 +125,27 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="3" class="addColumn">
+                        <a class="add_btn" href="#">글쓰기 </a>
+                    </td>
+                    <td colspan="3" class="searchColumn">
                         <label for="search">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </label>
-                        <input type="text" name="search" value=""/>
+                        <input type="text" id="search" name="search" value="" placeholder="Enter"/>
                     </td>
                 </tr>
 
                 <tr>
                     <td colspan="6">
-                        <a class="page_btn" href="#"><<</a>
-                        <a class="page_btn" href="#"><</a>
+                        <a class="page_btn" href="#"><< </a>
+                        <a class="page_btn" href="#">< </a>
                         <a class="page_btn" href="#">1</a>
                         <a class="page_btn" href="#">2</a>
                         <a class="page_btn" href="#">3</a>
                         <a class="page_btn" href="#">4</a>
-                        <a class="page_btn" href="#">></a>
-                        <a class="page_btn" href="#">>></a>
+                        <a class="page_btn" href="#"> ></a>
+                        <a class="page_btn" href="#"> >></a>
                     </td>
                 </tr>
             </tfoot>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../public/font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../public/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .board_add {
+            margin : 0 auto;
+            margin-top: 200px;
+            padding : 50px;
+            width: 830px;
+            /*background-color: #8dcca9;*/
+            border-radius: 10px;
+        }
+        .titleBox, .authorBox, .contentBox {
+            padding-bottom: 10px;
+        }
+
+        .titleBox label, .authorBox label, .contentBox label {
+            display: block;
+        }
+        .titleBox input, .authorBox input {
+            height: 2rem;
+        }
+        .titleBox input, .authorBox input, .contentBox textarea {
+            border : 2px solid #EAEAEA;
+            padding-left: 10px;
+            padding-right: 10px;
+            outline: 0px;
+            background-color: #8dcca9;
+            border-radius: 10px;
+            width: 100%;
+
+        }
+
+        .titleBox input:focus, .authorBox input:focus, .contentBox textarea:focus {
+            border: solid 2px #8DB6A9;
+        }
+        .submit_btn {
+            /*appearance : none;*/
+
+            border : 0;
+            border-radius: 5px;
+            width: 100%;
+            height: 2rem;
+            cursor : pointer;
+        }
+        .submit_btn:hover {
+            color : #4948FF;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="">
+        <div class="board_add">
+            <form class="" action="index.html" method="post">
+                <!-- 제목 -->
+                <div class="titleBox">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" placeholder=" title">
+                </div>
+                <!-- 작성자 -->
+                <div class="authorBox">
+                    <label for="author">Author</label>
+                    <input type="text" id="author" name="author" placeholder=" author">
+                </div>
+                <!-- 내용 -->
+                <div class="contentBox">
+                    <label for="content">Content</label>
+                    <textarea placeholder="content"id="content" name="content" rows="16"></textarea>
+                </div>
+
+                <!-- submit button  -->
+                <div class="">
+                    <input  class="submit_btn" value="쓰기" type="submit">
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
