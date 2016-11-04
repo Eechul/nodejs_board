@@ -12,6 +12,14 @@
             margin-top: 0;
             margin-bottom: 8px;
         }
+        a {
+            text-decoration: none;
+            padding: 2px;
+            border: 1px solid #8DB6A9;
+        }
+        a:link, a:visited {
+            color: black;
+        }
         .board_add {
             margin : 0 auto;
             margin-top: 50px;
@@ -31,13 +39,25 @@
             outline: 0px;
             background-color: #8dcca9;
             border-radius: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
         .commentBox .comment:focus {
             border: solid 2px #8DB6A9;
         }
-        .commentList {
+        .commentList .none_comment{
             text-align: center;
             padding: 5px;
+        }
+        .commentText {
+            padding-bottom: 5px;
+        }
+        .commentSummary {
+            /*display: inline-block;*/
+            font-size: 0.8rem;
+        }
+        .commentContent {
+            padding: 6px;
         }
         /*.commentBox .comment{
             padding-top: 10px:
@@ -158,10 +178,27 @@
                 </div>
                 <hr/>
                 <div class="commentView">
-                    <label for="">댓글</label>
-                    <!-- <div class="commentList">
-                        <span>댓글이 존재하지 않습니다.</span>
-                    </div> -->
+                    <div class="commentText">Comment</div>
+                    <div class="commentList">
+                        <div class="">
+                            <div class="commentSummary">
+                                <span class="name">이동철</span>
+                                <span class="date">2016.11.01 14:00</span>
+                                <span>
+                                    <a href="">EDIT</a>
+                                    <a href="">DEL</a>
+                                    <a href="">REPLY</a>
+                                </span>
+                            </div>
+                            <div class="commentContent">
+                                이건 내용입니다. 그래서 div
+                            </div>
+                        </div>
+                        <div class="none_comment">
+                            댓글이 존재하지 않습니다.
+                        </div>
+                    </div>
+
                     <hr/>
                 </div>
                 <div class="commentBox">

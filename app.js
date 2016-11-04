@@ -13,12 +13,14 @@ var io = require('socket.io')(http);
 // 실험
 var ss = require('socket.io-stream');
 
+
+
 app.locals.pretty = true;
 app.set('view engine', 'ejs');
 app.set('views', __dirname+'/views');
 
 app.use(express.static('public'));
-
+//
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var name = 0 // 임시 아이디
@@ -104,9 +106,11 @@ io.on('connection', function(socket) {
 })
 
 // 게시판 라우터
-app.get('/', routes.board.index);
+app.get(['/', '/:id'], routes.board.index);
+// app.get('/view', routes.board.view);
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
+
 
 
 // 채팅 라우터

@@ -1,24 +1,40 @@
-
 var mysql = require('../config/db/mysql'), // 디비 모듈화
     pool = mysql.pool
-
+console.log(1);
 // 이것만 되는 상태. connection pool 시험작업 완료
 exports.index = function (req, res) {
-    // var sql= 'select * from board_tb';
-    //     pool.getConnection(function(err, conn) {
-    //         conn.query(sql, function(err, boards, fields) {
-    //             if(err) {
-    //                 console.log(err);
-    //                 res.status(500).send('Internal Server Error');
-    //             } else {
-    //                 console.log(boards)
-    //                 res.send(boards)
-    //             }
-    //             conn.release()
-    //         })
-    //     })
-    res.render('public/view');
+    // console.log("id : ", req.params.id);
+    if(req.params.id) {
+        var id = req.params.id
+        var updateSql= 'UPDATE board_tb SET HIT_CNT = HIT_CNT+1 WHERE BOARD_NO = '+id
+        var selectSql = 'SELECT * FROM board_tb WHERE BOARD_NO = "'+id+'"'
+            pool.getConnection(function(err, conn) {
+                conn.query(updateSql, function(err, s, fields) {
+                    if(err) throw err;
+                    else {
+                        conn.query(selectSql, function(err, board, fields) {
+                            if(err) throw err;
+                            else {
+                                console.log("SUCCESS1", board[0])
+                                res.render('board_view', board[0]);
+                            }
+                        })
+                        console.log("SUCCESS2")
+                    }
+                    conn.release()
+                })
+            })
+    }
+    else {
+        res.render('view')
+    }
+    //
+    // res.render('view');
 }
+
+// exports.view = function(req, res) {
+//
+// }
 
 
 //  conn.query(sql, function(err, boards, fields) {

@@ -1,7 +1,7 @@
 
 var mysql = require('mysql'),
     pool = mysql.createPool({
-        connectionLimit : 15,
+        // connectionLimit : 15,
         host      : 'localhost',
         user      : 'root',
         password  : 'dongdb',
