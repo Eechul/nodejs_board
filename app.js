@@ -1,6 +1,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var routes = require('./routes/index.js')
+var ejs = require('ejs');
 
 var path = require('path');
 
@@ -106,19 +107,20 @@ io.on('connection', function(socket) {
 })
 
 // 게시판 라우터
-app.get(['/', '/:id'], routes.board.index);
+app.get(['/board','/board/:id'], routes.board.index);
 // app.get('/view', routes.board.view);
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
-
+// comment ajax route
+app.post('/ajax/comment', routes.board.addComment);
 
 
 // 채팅 라우터
-app.get('/chat', routes.chatting.index)
-app.get('/chat/download/:fname/:tname', routes.chatting.download)
+// app.get('/chat', routes.chatting.index)
+// app.get('/chat/download/:fname/:tname', routes.chatting.download)
 
 // 인스타 테스트
-app.get('/instar', routes.instar.index);
+// app.get('/instar', routes.instar.index);
 http.listen(4002, function () {
   console.log('Example app listening on port 4002!');
 });

@@ -2,8 +2,8 @@
 <html lang="kr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../public/font/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../public/css/style.css">
+    <link rel="stylesheet" href="/font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <style>
         * {
             box-sizing: border-box;
@@ -29,11 +29,11 @@
             /*background-color: #8dcca9;*/
             border-radius: 10px;
         }
-        .numberBox, .submary, .commentCountBox, .viewCountBox, .comment {
+        .numberBox, .submary, .commentCountBox, .viewCountBox, .commentContent {
             display: inline-block;
             padding: 1px;
         }
-        .commentBox .comment {
+        .commentBox .commentContent {
             width: 100%;
             border : 2px solid #EAEAEA;
             outline: 0px;
@@ -134,7 +134,7 @@
                 <div class="board_header">
                     <!-- 번호 -->
                     <div class="numberBox">
-                        <span class="boardNumber">0001</label>
+                        <span class="boardNumber"><%=board.FOMAT_BOARD_NO%></span>
                     </div>
 
                     <!-- 작성자 -->
@@ -151,30 +151,23 @@
                         <!-- 조회수 -->
                         <div class="viewCountBox">
                             <i class="fa fa-eye" aria-hidden="true"></i>
-                            <span class="viewCount">0</label>
+                            <span class="viewCount"><%=board.HIT_CNT%></label>
                         </div>
                     </div>
                 </div>
                 <!-- 좋아요 -->
                 <div class="likeBox">
                         <i class="fa fa-thumbs-up fa-5x" aria-hidden="true" id="like_btn"></i>
-                    <span class="likeCount">0</label>
+                    <span class="likeCount"><%=board.LIKE_CNT%></label>
                 </div>
                 <!-- 제목 -->
                 <div class="titleBox">
-                    <h3>제목인데 뭥</h3>
+                    <h3><%=board.TITLE_NM%></h3>
                 </div>
 
                 <!-- 내용 -->
                 <div class="contentBox">
-                    <div class="content">
-                        <p>
-                            나는 동철이다 그러므로 나는동철임니다 가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다가나다
-                        </p>
-                        <p>
-                            유저는 띄어쓰기를(\n) 할때마다 p 태그가 생성됩니다
-                        </p>
-                    </div>
+                    <pre class="content"><%=board.CONTENT_TX%></pre>
                 </div>
                 <hr/>
                 <div class="commentView">
@@ -202,24 +195,57 @@
                     <hr/>
                 </div>
                 <div class="commentBox">
-                    <div class="commentInfo">
-                        <label for="commentName">name : </label>
-                        <input type="text" id="commentName" name="commentName" value=""/>
-                        <label for="commentPassword">password : </label>
-                        <input type="text" id="commentPassword" name="commentPassword" value=""/>
+                    <div class="commentBox comment">
+                        <div class="commentInfo">
+                            <label for="commentName">name : </label>
+                            <input type="text" id="commentName" name="commentName" value=""/>
+                            <label for="commentPassword">password : </label>
+                            <input type="text" id="commentPassword" name="commentPassword" value=""/>
+                        </div>
+                        <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
                     </div>
-                    <textarea id="comment" class="comment" name="name" rows="8"\></textarea>
-
-
                 </div>
                 <!-- submit button  -->
                 <div class="">
-                    <input  class="submit_btn" value="쓰기" type="submit">
+                    <input type="button" id="submit_btn" class="submit_btn" value="쓰기">
                 </div>
 
             </form>
         </div>
     </div>
+    <script src="/js/jquery/jquery-3.1.1.js"></script>
+    <script type="text/javascript">
+        $("#submit_btn").click(function() {
 
+            var boardId = Number($(".boardNumber").text())
+
+            var commentName = $("#commentName").val()
+            var commentPswd = $("#commentPassword").val()
+            var commentContent = $("#commentContent").val()
+
+            $(".commentBox .comment").append('<span>'+commentName+'</span>')
+
+            // 비로그인 코멘트
+            var url = "/ajax/comment/"
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    id: boardId,
+                    name: commentName,
+                    pswd: commentPswd,
+                    content: commentContent
+                },
+                success:function(result) {
+                    console.log(result['comment_userInfo'])
+                },
+                error:function(e) {
+                    alert(e.responseText)
+                }
+            })
+
+        })
+    </script>
 </body>
 </html>
