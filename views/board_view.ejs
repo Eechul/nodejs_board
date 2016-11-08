@@ -52,9 +52,12 @@
         .commentText {
             padding-bottom: 5px;
         }
+        .commentView {
+            padding-top: 5px;
+        }
         .commentSummary {
-            /*display: inline-block;*/
-            font-size: 0.8rem;
+            /*float: left;*/
+            font-size: 0.9rem;
         }
         .commentContent {
             padding: 6px;
@@ -125,109 +128,116 @@
         .commentInfo input[type="text"] {
             padding: 3px;
         }
+
     </style>
 </head>
 <body>
     <div class="">
         <div class="board_add">
-            <form class="" action="index.html" method="post">
-                <div class="board_header">
-                    <!-- 번호 -->
-                    <div class="numberBox">
-                        <span class="boardNumber"><%=board.FOMAT_BOARD_NO%></span>
-                    </div>
-
-                    <!-- 작성자 -->
-                    <div class="authorBox">
-                        : <span>이동철</span>
-                    </div>
-
-                    <div class="submary">
-                        <!-- 댓글수 -->
-                        <div class="commentCountBox">
-                            <i class="fa fa-comment-o" aria-hidden="true"></i>
-                            <span class="commentCount">0</label>
-                        </div>
-                        <!-- 조회수 -->
-                        <div class="viewCountBox">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                            <span class="viewCount"><%=board.HIT_CNT%></label>
-                        </div>
-                    </div>
-                </div>
-                <!-- 좋아요 -->
-                <div class="likeBox">
-                        <i class="fa fa-thumbs-up fa-5x" aria-hidden="true" id="like_btn"></i>
-                    <span class="likeCount"><%=board.LIKE_CNT%></label>
-                </div>
-                <!-- 제목 -->
-                <div class="titleBox">
-                    <h3><%=board.TITLE_NM%></h3>
+            <div class="board_header">
+                <!-- 번호 -->
+                <div class="numberBox">
+                    <span class="boardNumber"><%=board.FOMAT_BOARD_NO%></span>
                 </div>
 
-                <!-- 내용 -->
-                <div class="contentBox">
-                    <pre class="content"><%=board.CONTENT_TX%></pre>
+                <!-- 작성자 -->
+                <div class="authorBox">
+                    : <span>이동철</span>
                 </div>
-                <hr/>
-                <div class="commentView">
-                    <div class="commentText">Comment</div>
-                    <div class="commentList">
-                        <div class="">
-                            <div class="commentSummary">
-                                <span class="name">이동철</span>
-                                <span class="date">2016.11.01 14:00</span>
-                                <span>
-                                    <a href="">EDIT</a>
-                                    <a href="">DEL</a>
-                                    <a href="">REPLY</a>
-                                </span>
-                            </div>
-                            <div class="commentContent">
-                                이건 내용입니다. 그래서 div
-                            </div>
+
+                <div class="submary">
+                    <!-- 댓글수 -->
+                    <div class="commentCountBox">
+                        <i class="fa fa-comment-o" aria-hidden="true"></i>
+                        <span class="commentCount">0</label>
+                    </div>
+                    <!-- 조회수 -->
+                    <div class="viewCountBox">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        <span class="viewCount"><%=board.HIT_CNT%></label>
+                    </div>
+                </div>
+            </div>
+            <!-- 좋아요 -->
+            **** 좋아요 버튼은 사용자 세션작업이 완료 될때 완벽히 구현될 예정입니다.
+            <div class="likeBox">
+                <!--ejs 코드로 if(!board.LIKE_FL)  CSS 코드
+                    style="color: black;"를 인라인에 삽입
+                    else style="color: rgb(88, 144, 255);"  -->
+                <i class="fa fa-thumbs-up fa-5x" aria-hidden="true" id="like_btn"></i>
+                <span class="likeCount"><%=board.LIKE_CNT%></label>
+            </div>
+            <!-- 제목 -->
+            <div class="titleBox">
+                <h3><%=board.TITLE_NM%></h3>
+            </div>
+
+            <!-- 내용 -->
+            <div class="contentBox">
+                <pre class="content"><%=board.CONTENT_TX%></pre>
+            </div>
+            <hr/>
+            <div class="commentLayout">
+                <div class="commentText">Comment</div>
+                <div class="commentList">
+                    <!-- comment for -->
+                    <%comments.forEach(function(comment) {%>
+                    <div id="commentView_<%=comment.BOARD_COMMENT_NO%>" class="commentView">
+                        <div class="commentSummary">
+                            <span class="name"><%=comment.USER_CD%></span>
+                            <span class="date"><%=comment.DATE%></span>
+                            <span>
+                                <a href="" id="commentEdit_<%=comment.BOARD_COMMENT_NO%>"       class="commentEdit">EDIT</a>
+                                <a href="" id="commentDelete_<%=comment.BOARD_COMMENT_NO%>"
+                                    class="commentDelete">DEL</a>
+                                <!-- <a href="#" onclick="return false;"
+                                id="commentReply_<%=comment.BOARD_COMMENT_NO%>"
+                                    class="commentReply">REPLY</a> -->
+                            </span>
                         </div>
+                        <div class="commentContent"><%=comment.COMMENT_TX%></div>
+                    </div>
+                    <%})
+                    <!-- // comment for  -->
+                    <!-- not comments  -->
+                    if(comments.length == 0 ) {%>
                         <div class="none_comment">
                             댓글이 존재하지 않습니다.
                         </div>
-                    </div>
-
-                    <hr/>
+                    <%}%>
+                    <!-- //not comments  -->
                 </div>
-                <div class="commentBox">
-                    <div class="commentBox comment">
-                        <div class="commentInfo">
-                            <label for="commentName">name : </label>
-                            <input type="text" id="commentName" name="commentName" value=""/>
-                            <label for="commentPassword">password : </label>
-                            <input type="text" id="commentPassword" name="commentPassword" value=""/>
-                        </div>
-                        <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
+
+                <hr/>
+            </div>
+            <div class="commentBox">
+                <div class="commentBox comment">
+                    <div class="commentInfo">
+                        <label for="commentName">name : </label>
+                        <input type="text" id="commentName" name="commentName" value=""/>
+                        <label for="commentPassword">password : </label>
+                        <input type="text" id="commentPassword" name="commentPassword" value=""/>
                     </div>
+                    <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
                 </div>
                 <!-- submit button  -->
                 <div class="">
                     <input type="button" id="submit_btn" class="submit_btn" value="쓰기">
                 </div>
-
-            </form>
+            </div>
         </div>
     </div>
     <script src="/js/jquery/jquery-3.1.1.js"></script>
     <script type="text/javascript">
+        var tempid
         $("#submit_btn").click(function() {
-
             var boardId = Number($(".boardNumber").text())
-
             var commentName = $("#commentName").val()
             var commentPswd = $("#commentPassword").val()
             var commentContent = $("#commentContent").val()
-
-            $(".commentBox .comment").append('<span>'+commentName+'</span>')
-
             // 비로그인 코멘트
             var url = "/ajax/comment/"
-
+            //  Ajax comment
             $.ajax({
                 type: "POST",
                 url: url,
@@ -238,14 +248,38 @@
                     content: commentContent
                 },
                 success:function(result) {
-                    console.log(result['comment_userInfo'])
+                    console.log("??");
+                    location.reload()
                 },
-                error:function(e) {
-                    alert(e.responseText)
+                error:function(event) {
                 }
             })
-
+            //  --Ajax comment
         })
+        // Ajax like button
+        $("#like_btn").click(function() {
+            var boardId = Number($(".boardNumber").text())
+            var url = "/ajax/like"
+            // Ajax like
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    id: boardId
+                },
+                success:function(result) {
+                    alert("좋아요 버튼을 누르셨습니다.")
+                    var like_number=Number($(".likeCount").text())+1
+                    $(".likeCount").text(like_number)
+                },
+                error:function(event) {
+
+                }
+            })
+        })
+        // -- Ajax like button
+
+
     </script>
 </body>
 </html>

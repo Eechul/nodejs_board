@@ -107,13 +107,21 @@ io.on('connection', function(socket) {
 })
 
 // 게시판 라우터
-app.get(['/board','/board/:id'], routes.board.index);
+app.get('/board/list', routes.board.index);
+// list?offset=0&max=20$
+app.get('/board/list/:id', routes.board.view);
+app.get('/board/search', routes.board.search)
+
+
 // app.get('/view', routes.board.view);
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
-// comment ajax route
-app.post('/ajax/comment', routes.board.addComment);
 
+// ajax 라우터
+// comment ajax routes
+app.post('/ajax/comment', routes.board.addComment);
+// like routes
+app.post('/ajax/like', routes.board.addLike);
 
 // 채팅 라우터
 // app.get('/chat', routes.chatting.index)

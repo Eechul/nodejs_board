@@ -1,10 +1,10 @@
 
 var mysql = require('mysql'),
     pool = mysql.createPool({
-        // connectionLimit : 15,
         host      : 'localhost',
         user      : 'root',
         password  : 'dongdb',
-        database  : 'mysql'
+        database  : 'mysql',
+        dateStrings:true
     })
 exports.pool = pool
