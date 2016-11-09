@@ -111,11 +111,13 @@ app.get('/board/list', routes.board.index);
 // list?offset=0&max=20$
 app.get('/board/list/:id', routes.board.view);
 app.get('/board/search', routes.board.search)
-
-
 // app.get('/view', routes.board.view);
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
+app.get('/board/edit/:id', routes.board.edit)
+app.get('/board/del/:id', routes.board.delete);
+app.post('/board/edit', routes.board.editPut)
+
 
 // ajax 라우터
 // comment ajax routes

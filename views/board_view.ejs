@@ -33,7 +33,7 @@
             display: inline-block;
             padding: 1px;
         }
-        .commentBox .commentContent {
+        .commentBox .commentContent, .re-commentBox .commentContent{
             width: 100%;
             border : 2px solid #EAEAEA;
             outline: 0px;
@@ -42,7 +42,7 @@
             padding-left: 10px;
             padding-right: 10px;
         }
-        .commentBox .comment:focus {
+        .commentBox .comment:focus, .re-commentBox .comment:focus {
             border: solid 2px #8DB6A9;
         }
         .commentList .none_comment{
@@ -138,6 +138,8 @@
                 <!-- 번호 -->
                 <div class="numberBox">
                     <span class="boardNumber"><%=board.FOMAT_BOARD_NO%></span>
+                    <a href="/board/del/<%=board.BOARD_NO%>">DEL</a>
+                    <a href="/board/edit/<%=board.BOARD_NO%>">EDIT</a>
                 </div>
 
                 <!-- 작성자 -->
@@ -190,9 +192,9 @@
                                 <a href="" id="commentEdit_<%=comment.BOARD_COMMENT_NO%>"       class="commentEdit">EDIT</a>
                                 <a href="" id="commentDelete_<%=comment.BOARD_COMMENT_NO%>"
                                     class="commentDelete">DEL</a>
-                                <!-- <a href="#" onclick="return false;"
+                                <a href="#" onclick="return false;"
                                 id="commentReply_<%=comment.BOARD_COMMENT_NO%>"
-                                    class="commentReply">REPLY</a> -->
+                                    class="commentReply">REPLY</a>
                             </span>
                         </div>
                         <div class="commentContent"><%=comment.COMMENT_TX%></div>
@@ -209,22 +211,23 @@
                 </div>
 
                 <hr/>
-            </div>
-            <div class="commentBox">
-                <div class="commentBox comment">
-                    <div class="commentInfo">
-                        <label for="commentName">name : </label>
-                        <input type="text" id="commentName" name="commentName" value=""/>
-                        <label for="commentPassword">password : </label>
-                        <input type="text" id="commentPassword" name="commentPassword" value=""/>
+                <div class="commentBox" >
+                    <div class="commentBox comment">
+                        <div class="commentInfo">
+                            <label for="commentName">name : </label>
+                            <input type="text" id="commentName" name="commentName" value=""/>
+                            <label for="commentPassword">password : </label>
+                            <input type="password" id="commentPassword" name="commentPassword" value=""/>
+                        </div>
+                        <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
                     </div>
-                    <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
-                </div>
-                <!-- submit button  -->
-                <div class="">
-                    <input type="button" id="submit_btn" class="submit_btn" value="쓰기">
+                    <!-- submit button  -->
+                    <div class="">
+                        <input type="button" id="submit_btn" class="submit_btn" value="쓰기">
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
     <script src="/js/jquery/jquery-3.1.1.js"></script>
@@ -277,9 +280,46 @@
                 }
             })
         })
+        $("*[id^='submit_btn_']").click(function() {
+            console.log(this);
+        })
         // -- Ajax like button
 
+        $(".commentReply").click(function() {
 
+            if(tempid) {
+                $("#submit_btn_"+tempid).off("click", function() {
+                    // action
+                })
+                $("#commentView_"+tempid+" > .commentBox").empty()
+            }
+            var commentReplyId = $(this)[0].id
+
+            var commentId = commentReplyId.split("_")[1]
+            var submit_btn_number = "submit_btn_"+commentId
+            $("#commentView_"+commentId).append(
+                `
+                <div class="commentBox">
+                    <div class="commentBox comment">
+                        <div class="commentInfo">
+                            <label for="commentName_">name : </label>
+                            <input type="text" id="commentName_${commentId}" name="commentName" value=""/>
+                            <label for="commentPassword">password : </label>
+                            <input type="password" id="commentPassword_${commentId}" name="commentPassword" value=""/>
+                        </div>
+                        <textarea id="commentContent_${commentId}" class="commentContent" name="commentContent" rows="8"\></textarea>
+                    </div>
+                    <div class="">
+                        <input type="button" id="${submit_btn_number}" class="submit_btn" value="쓰기">
+                    </div>
+                </div>
+                `
+            )
+            tempid = commentId;
+            $("#"+submit_btn_number).on("click", function() {
+                alert($(this))
+            })
+        })
     </script>
 </body>
 </html>

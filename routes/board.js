@@ -4,7 +4,7 @@ exports.index = function(req, res) {
     var offset = req.query.offset,
         max =  req.query.max
     pool.getConnection(function(err, conn) {
-        var sql  = "SELECT lpad(BOARD_NO, 5, '0') as 'BOARD_NO', USER_CD, TITLE_NM, LIKE_CNT, CONTENT_TX, DATE_DT, HIT_CNT FROM board_tb ORDERS LIMIT 2"
+        var sql  = "SELECT lpad(BOARD_NO, 5, '0') as 'BOARD_NO', USER_CD, TITLE_NM, LIKE_CNT, CONTENT_TX, DATE_DT, HIT_CNT FROM board_tb ORDERS LIMIT 5"
         // LIMIT 2는 곧 동적으로 바뀔것임
         var boardCountSql = "SELECT NUMBERING_NO FROM board_count_number_tb WHERE NAME_NM = 'board_tb'"
         // conn.query(sql, function(err, boards, fields) {
@@ -49,9 +49,9 @@ exports.view = function (req, res) {
         // FROM board_tb , board_like_tb
         // WHERE board_tb.BOARD_NO = board_like_tb.BOARD_NO
         //  AND	BOARD_NO = '00018' AND  USER_CD = /*유저세션비교*/
-    var commentSelectSql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = "+id
+    var commentSelectSql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = 20 ORDER BY GROUP_NO ASC , DEPT_NO ASC ,BOARD_COMMENT_NO ASC"
         pool.getConnection(function(err, conn) {
-                conn.query(boardUpdateSql, function(err, s, fields) {
+                conn.query(boardUpdateSql, [id], function(err, s, fields) {
                     if(err) throw err;
                     else {
                         conn.query(boardSelectSql, function(err, board, fields) {
@@ -95,6 +95,55 @@ exports.addPost = function(req, res) {
                 })
             }
         conn.release()
+        })
+    })
+}
+// edit
+exports.edit = function(req, res) {
+    var id = req.params.id,
+        selectSql = "SELECT *, lpad(BOARD_NO,5,0) AS 'FOMAT_BOARD_NO' FROM board_tb WHERE BOARD_NO = ?"
+    pool.getConnection( function(err, conn) {
+        conn.query(selectSql, [id], function(err, board, fields){
+            if(err) throw err
+            else {
+                res.render('board_edit', {board : board[0]});
+            }
+        })
+    })
+}
+// PUT edit
+exports.editPut = function(req, res) {
+    var id = req.body.boardNumber,
+        title = req.body.title,
+        content = req.body.content,
+        updateSql = "UPDATE board_tb SET TITLE_NM = ?, CONTENT_TX = ? WHERE BOARD_NO = ?"
+    console.log(id, title, content);
+    pool.getConnection( function(err, conn) {
+        conn.query(updateSql, [title, content, id], function(err, board, fields){
+            if(err) throw err
+            else {
+                var redirect = "/board/list/"+id
+                res.redirect("/board/list/"+id)
+            }
+        })
+    })
+}
+// delete
+exports.delete = function(req, res) {
+    var id = req.params.id,
+        deleteSql = "DELETE FROM board_tb WHERE BOARD_NO = ?"
+        deleteCountSql = "UPDATE board_count_number_tb SET NUMBERING_NO = NUMBERING_NO - 1 WHERE NAME_NM = 'board_tb'"
+    pool.getConnection( function(err, conn) {
+        conn.query(deleteSql, [id], function(err, result, fields){
+            if(err) throw err
+            else {
+                conn.query(deleteCountSql, [id], function(err, result, fields){
+                    if(err) throw err
+                    else {
+                        res.redirect('/board/list');
+                    }
+                })
+            }
         })
     })
 }

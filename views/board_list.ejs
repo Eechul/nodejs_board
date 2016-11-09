@@ -163,7 +163,7 @@
     <script type="text/javascript">
         var numbering_no = <%=number.NUMBERING_NO%>;
         console.log('<%=number.NUMBERING_NO%>');
-        var maxNumber = 2 // 맥스넘버는 select에 따라바뀜. 이건 초기값.
+        var maxNumber = 5 // 맥스넘버는 select에 따라바뀜. 이건 초기값.
         var pageMax = numbering_no / maxNumber
         pageMax = Math.ceil(pageMax) // 예) 5개일 경우 2페이지가 아니라 3페이지 필요
         var offset;
