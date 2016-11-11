@@ -5,9 +5,7 @@ exports.index = function(req, res) {
         max =  req.query.max
     pool.getConnection(function(err, conn) {
         var sql  = "SELECT lpad(BOARD_NO, 5, '0') as 'BOARD_NO', USER_CD, TITLE_NM, LIKE_CNT, CONTENT_TX, DATE_DT, HIT_CNT FROM board_tb ORDERS LIMIT 5"
-        // LIMIT 2는 곧 동적으로 바뀔것임
         var boardCountSql = "SELECT NUMBERING_NO FROM board_count_number_tb WHERE NAME_NM = 'board_tb'"
-        // conn.query(sql, function(err, boards, fields) {
             if(!offset && !max) {
                 // 게시판 리스트 출력
                 conn.query(sql, function(err, boards, fields) {
@@ -49,7 +47,7 @@ exports.view = function (req, res) {
         // FROM board_tb , board_like_tb
         // WHERE board_tb.BOARD_NO = board_like_tb.BOARD_NO
         //  AND	BOARD_NO = '00018' AND  USER_CD = /*유저세션비교*/
-    var commentSelectSql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = 20 ORDER BY GROUP_NO ASC , DEPT_NO ASC ,BOARD_COMMENT_NO ASC"
+    var commentSelectSql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = ? ORDER BY GROUP_NO, DEPT_NO, BOARD_COMMENT_NO"
         pool.getConnection(function(err, conn) {
                 conn.query(boardUpdateSql, [id], function(err, s, fields) {
                     if(err) throw err;
@@ -58,7 +56,7 @@ exports.view = function (req, res) {
                             if(err) throw err;
                             else {
                                 var sql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = ?"
-                                conn.query(commentSelectSql, function(err, comments, fields) {
+                                conn.query(commentSelectSql, [id], function(err, comments, fields) {
                                     if(err) throw err;
                                     else {
                                         // 여기서 like_FL 정보를 뿌린다
@@ -193,6 +191,27 @@ exports.search = function(req, res) {
         conn.release()
     })
 }
+// 대댓글 기능.. UI만 하면됨.
+exports.comment = function(req, res) {
+    var commentId = req.body.id,
+        name = req.body.name,
+        password = req.body.pswd,
+        content = req.body.content;
+
+    var selectSql = "SELECT * FROM board_comment_tb WHERE BOARD_COMMENT_NO = ?"
+    pool.getConnection(function(err, conn) {
+        conn.query(selectSql, [commentId], function(err, comments, fields) {
+            if(err) throw err
+            else {
+                var comment = comments[0]
+                var insertSql = "INSERT INTO board_comment_tb(COMMENT_PASSWORD_TX, BOARD_NO, USER_CD, COMMENT_TX, GROUP_NO, DEPT_NO) VALUES(?, ?, ?, ?, ?, ?)"
+                conn.query(insertSql, [password, comment.BOARD_COMMENT_NO, name, content, comment.GROUP_NO, Number(comment.DEPT_NO)+1], function(err, success, fields) {
+
+                })
+            }
+        })
+    })
+}
 // Add comment
 exports.addComment = function(req, res) {
     var id = req.body.id,
@@ -206,22 +225,23 @@ exports.addComment = function(req, res) {
         COMMENT_TX: content
     }
     // var comment_userInfo = [password, id, name, content]
-    console.log("1");
     pool.getConnection(function(err, conn) {
-        console.log("2");
-        var insertSql = 'INSERT INTO board_comment_tb(COMMENT_PASSWORD_TX, BOARD_NO, USER_CD, COMMENT_TX) VALUES(?, ?, ?, ?)'
-        conn.query(insertSql, [password, id, name, content], function(err, board, fields) {
-            console.log("3")
+        // 처음 댓글을 삽입할때, group번호는 증가시켜줘야 되기 때문에
+        var maxSql = "SELECT MAX(GROUP_NO) AS 'GROUP_MAX_NO' FROM board_comment_tb",
+        insertSql = "INSERT INTO board_comment_tb(COMMENT_PASSWORD_TX, BOARD_NO, USER_CD, COMMENT_TX, GROUP_NO) VALUES(?, ?, ?, ?, ?)"
+        conn.query(maxSql, function(err, comments, fields) {
             if(err) throw err;
             else {
-                console.log("4");
-                var selectSql = "SELECT * FROM board_comment_tb WHERE BOARD_NO = ?"
-                conn.query(selectSql, [id], function(err, board, fields) {
-                    res.send({result : true});
-                });
-                // res.render('board_view', {comment : comment_userInfo});
+                var group_max_no = comments[0].GROUP_MAX_NO + 1
+                conn.query(insertSql, [password, id, name, content, group_max_no], function(err, comment, fields) {
+                    if(err) throw err;
+                    else {
+                        res.send({result : true});
+                    }
+                })
             }
         })
+
     })
 }
 // Count like_number

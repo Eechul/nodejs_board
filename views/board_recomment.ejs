@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/font/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        a {
+            text-decoration: none;
+            padding: 2px;
+            border: 1px solid #8DB6A9;
+        }
+        a:link, a:visited {
+            color: black;
+        }
+        .numberBox, .submary, .commentCountBox, .viewCountBox, .commentContent {
+            display: inline-block;
+            padding: 1px;
+        }
+        .commentBox .commentContent, .re-commentBox .commentContent{
+            width: 100%;
+            border : 2px solid #EAEAEA;
+            outline: 0px;
+            background-color: #8dcca9;
+            border-radius: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .commentBox .comment:focus, .re-commentBox .comment:focus {
+            border: solid 2px #8DB6A9;
+        }
+        .commentList .none_comment{
+            text-align: center;
+            padding: 5px;
+        }
+        .commentText {
+            padding-bottom: 5px;
+        }
+        .commentView {
+            padding-top: 5px;
+        }
+        .commentSummary {
+            /*float: left;*/
+            font-size: 0.9rem;
+        }
+        .commentContent {
+            padding: 6px;
+        }
+        /*.commentBox .comment{
+            padding-top: 10px:
+        }*/
+        .submary, .likeBox{
+            clear:both;
+            float:right;
+        }
+        .titleBox, .authorBox, .contentBox {
+            clear:both;
+            padding-bottom: 10px;
+        }
+        .titleBox label, .authorBox label, .contentBox label {
+            /*display: block;*/
+        }
+        .titleBox input, .authorBox input {
+            height: 2rem;
+        }
+        .titleBox input, .authorBox input, .contentBox textarea {
+            border : 1px solid #EAEAEA;
+            outline: 0px;
+            background-color: #8dcca9;
+            border-radius: 10px;
+            width: 100%;
+
+        }
+        .likeBox .likeCount {
+            display: inline-block;
+            font-size: 2rem;
+            text-align: center;
+            width: 80px;
+        }
+
+        .titleBox input:focus, .authorBox input:focus, .contentBox textarea:focus {
+            border: solid 3px #8DB6A9;
+        }
+        .contentBox textarea {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .submit_btn {
+            /*appearance : none;*/
+            border : 0;
+            border-radius: 5px;
+            width: 100%;
+            height: 2rem;
+            cursor : pointer;
+        }
+        .submit_btn:hover {
+            color : #4948FF;
+        }
+
+        #like_btn {
+            cursor: pointer;
+            /*color: rgb(88, 144, 255);*/
+            /*클릭 되었을때 위의 컬러로 적용*/
+            padding: 10px;
+
+        }
+
+        .commentInfo {
+            text-align: right;
+            padding: 3px;
+        }
+        .commentInfo input[type="text"] {
+            padding: 3px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="commentBox" >
+        <div class="commentBox comment">
+            <div class="commentInfo">
+                <label for="commentName">name : </label>
+                <input type="text" id="commentName" name="commentName" value=""/>
+                <label for="commentPassword">password : </label>
+                <input type="password" id="commentPassword" name="commentPassword" value=""/>
+            </div>
+            <textarea id="commentContent" class="commentContent" name="commentContent" rows="8"\></textarea>
+        </div>
+        <!-- submit button  -->
+        <div class="">
+            <input type="button" id="submit_btn" class="submit_btn" value="쓰기">
+        </div>
+    </div>
+
+</body>
+</html>

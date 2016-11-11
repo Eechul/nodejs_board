@@ -192,7 +192,7 @@
                                 <a href="" id="commentEdit_<%=comment.BOARD_COMMENT_NO%>"       class="commentEdit">EDIT</a>
                                 <a href="" id="commentDelete_<%=comment.BOARD_COMMENT_NO%>"
                                     class="commentDelete">DEL</a>
-                                <a href="#" onclick="return false;"
+                                <a href="/comment/<%=comment.BOARD_COMMENT_NO%>" target="_blank"
                                 id="commentReply_<%=comment.BOARD_COMMENT_NO%>"
                                     class="commentReply">REPLY</a>
                             </span>
@@ -238,6 +238,7 @@
             var commentName = $("#commentName").val()
             var commentPswd = $("#commentPassword").val()
             var commentContent = $("#commentContent").val()
+            var commentGroup = $
             // 비로그인 코멘트
             var url = "/ajax/comment/"
             //  Ajax comment
@@ -286,15 +287,13 @@
         // -- Ajax like button
 
         $(".commentReply").click(function() {
-
             if(tempid) {
                 $("#submit_btn_"+tempid).off("click", function() {
                     // action
                 })
                 $("#commentView_"+tempid+" > .commentBox").empty()
             }
-            var commentReplyId = $(this)[0].id
-
+            var commentReplyId = this.id
             var commentId = commentReplyId.split("_")[1]
             var submit_btn_number = "submit_btn_"+commentId
             $("#commentView_"+commentId).append(
@@ -310,16 +309,42 @@
                         <textarea id="commentContent_${commentId}" class="commentContent" name="commentContent" rows="8"\></textarea>
                     </div>
                     <div class="">
-                        <input type="button" id="${submit_btn_number}" class="submit_btn" value="쓰기">
+                        <input type="button" id="${submit_btn_number}" class="re_submit_btn" value="쓰기">
                     </div>
                 </div>
                 `
             )
             tempid = commentId;
-            $("#"+submit_btn_number).on("click", function() {
-                alert($(this))
-            })
+            // $(".re_submit_btn").on("click", function() {
+            //     console.log(this);
+            //     var boardId = Number($(".boardNumber").text())
+            //     var commentName = $("#commentName_"+commentId).val()
+            //     var commentPswd = $("#commentPassword_"+commentId).val()
+            //     var commentContent = $("#commentContent_"+commentId).val()
+            //     var parent = $
+            //     // 비로그인 코멘트
+            //     var url = "/ajax/comment/"
+            //     //  Ajax comment
+            //     $.ajax({
+            //         type: "POST",
+            //         url: url,
+            //         data: {
+            //             id: boardId,
+            //             name: commentName,
+            //             pswd: commentPswd,
+            //             content: commentContent
+            //         },
+            //         success:function(result) {
+            //             console.log("??");
+            //             location.reload()
+            //         },
+            //         error:function(event) {
+            //         }
+            //     })
+            //     //  --Ajax comment
+            // })
         })
+
     </script>
 </body>
 </html>

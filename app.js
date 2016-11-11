@@ -117,6 +117,7 @@ app.post('/add', routes.board.addPost);
 app.get('/board/edit/:id', routes.board.edit)
 app.get('/board/del/:id', routes.board.delete);
 app.post('/board/edit', routes.board.editPut)
+app.get('/comment/:id', routes.board.comment)
 
 
 // ajax 라우터
