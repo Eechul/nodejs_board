@@ -1,3 +1,4 @@
+exports.auth = require('./auth')
 exports.board = require('./board')
 exports.chatting = require('./chatting')
 exports.instar = require('./instar')

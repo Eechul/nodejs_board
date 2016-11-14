@@ -1,28 +1,12 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var routes = require('./routes/index.js')
-var ejs = require('ejs');
-
-var path = require('path');
-
+var app = require('./config/express/express.js')()
+var passport = require('./config/passport/passport.js')(app)
 var fs = require('fs');
-
-var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
-// 실험
-var ss = require('socket.io-stream');
-
-
-
-app.locals.pretty = true;
 app.set('view engine', 'ejs');
 app.set('views', __dirname+'/views');
-
-app.use(express.static('public'));
-//
-app.use(bodyParser.urlencoded({ extended: false }));
+var ss = require('socket.io-stream');
+var routes = require('./routes/index.js')
 
 var name = 0 // 임시 아이디
 var userInfo = {
@@ -105,17 +89,38 @@ io.on('connection', function(socket) {
         stream.pipe(fs.createWriteStream("public/file/"+data.name))
     })
 })
+// 로그인 라우터 test 단계
+app.get('/auth/login', routes.auth.login)
+// app.post('/auth/login', routes.auth.loginPost)
+app.post(
+    '/auth/login',
+    passport.authenticate(
+        'local',
+        {
+            successRedirect: '/',
+            failureRedirect: '/auth/login',
+            failureFlash: false
+            // 인증에 실패할때 메세지를 한번 보여줌
+        }
+    )
+)
+app.get('/welcome', routes.auth.welcome)
+app.get('/auth/logout', routes.auth.logout)
+app.get('/auth/register', routes.auth.register)
+app.post('/auth/registerPost', routes.auth.registerPost)
 
 // 게시판 라우터
 app.get('/board/list', routes.board.index);
-// list?offset=0&max=20$
 app.get('/board/list/:id', routes.board.view);
+
 app.get('/board/search', routes.board.search)
-// app.get('/view', routes.board.view);
+
 app.get('/add', routes.board.add);
 app.post('/add', routes.board.addPost);
+
 app.get('/board/edit/:id', routes.board.edit)
 app.get('/board/del/:id', routes.board.delete);
+
 app.post('/board/edit', routes.board.editPut)
 app.get('/comment/:id', routes.board.comment)
 
