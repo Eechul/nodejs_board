@@ -1,5 +1,4 @@
-var bkfd2Password = require('pbkdf2-password')
-var hasher  = bkfd2Password()
+var hasher  = require('../config/hasher/pbkfd2_password')()
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var users = require('../config/db/model.js')()
@@ -25,9 +24,9 @@ exports.login = function(req, res) {
 exports.loginPost = passport.authenticate(
     'local',
     {
-        successRedirect: '/',
+        successRedirect: '/welcome',
         failureRedirect: '/login',
-        failureFlash: true
+        failureFlash: false
     }
 )
 // exports.loginPost = function(req, res) {
@@ -59,9 +58,9 @@ exports.loginPost = passport.authenticate(
 //     }
 // }
  exports.welcome = function(req, res) {
-    if(req.session.displayName) {
+    if(req.user && req.user.displayName) {
         res.send(`
-            <h1>Hello, ${req.session.displayName}
+            <h1>Hello, ${req.user.displayName}
             <a href="/auth/logout">logout</a>
             `);
     } else {
@@ -73,14 +72,17 @@ exports.loginPost = passport.authenticate(
  }
 
  exports.logout = function(req, res) {
-    delete req.session.displayName
-    res.redirect('/welcome');
+    req.logout();
+    req.session.save(function() {
+        res.redirect('/welcome');
+    })
  }
 
  exports.register = function(req, res) {
-    res.render('auth/auth_register', {state: req.query.state})
+    res.render('auth/auth_register')
  }
 
+// 이부분 다시
  exports.registerPost = function(req, res) {
     var user = {
         username : req.body.username,
@@ -91,25 +93,16 @@ exports.loginPost = passport.authenticate(
     for(var i=0; i<users.length; i++) {
         if(user.username === users[i].username) {
             userInfo = users[i]
-            res.redirect('/auth/register?state=1')
+            res.redirect('/auth/register')
         }
     }
     // 중복이 없다면 해쉬 수행
     if(!userInfo) {
         hasher({password: user.password}, function(err, pass, salt, hash) {
-            if(err) throw err;
-            else {
-                user.password = hash
-                user.salt = salt
-                console.log(users);
-                users.push(user) // 유저 추가
-            }
-            req.session.displayName = user.displayName
-            req.session.save(function() {
-                res.redirect('/welcome')
-            })
+            user.password = hash
+            user.salt = salt
+            users.push(user) // 유저 추가
+            res.redirect('/welcome')
         })
     }
-
-
  }

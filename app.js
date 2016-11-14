@@ -1,5 +1,8 @@
 var app = require('./config/express/express.js')()
-var passport = require('./config/passport/passport.js')(app)
+var passport = require('./config/passport/passport')(app)
+// var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy
+var hasher = require('./config/hasher/pbkfd2_password')()
 var fs = require('fs');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -7,6 +10,8 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname+'/views');
 var ss = require('socket.io-stream');
 var routes = require('./routes/index.js')
+
+
 
 var name = 0 // 임시 아이디
 var userInfo = {
@@ -97,12 +102,17 @@ app.post(
     passport.authenticate(
         'local',
         {
-            successRedirect: '/',
+            successRedirect: '/welcome',
             failureRedirect: '/auth/login',
             failureFlash: false
             // 인증에 실패할때 메세지를 한번 보여줌
         }
     )
+    // function(req,res) {
+    //     req.session.save(function() {
+    //         res.redirect('/welcome')
+    //     })
+    // }
 )
 app.get('/welcome', routes.auth.welcome)
 app.get('/auth/logout', routes.auth.logout)
