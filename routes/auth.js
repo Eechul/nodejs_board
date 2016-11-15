@@ -2,7 +2,8 @@ var hasher  = require('../config/hasher/pbkfd2_password')()
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var users = require('../config/db/model.js')()
-
+var pool = require('../config/db/mysql').pool
+var Promise = require('promise')
 
 exports.login = function(req, res) {
     var output = `
@@ -84,25 +85,53 @@ exports.loginPost = passport.authenticate(
 
 // 이부분 다시
  exports.registerPost = function(req, res) {
+    var userCode = require('../config/date/dateFormat').isCommonFormatDate(new Date(),1),
+        email = req.body.username,
+        pswd = req.body.password,
+        nickname = req.body.nickname
+
     var user = {
-        username : req.body.username,
-        password : req.body.password,
-        displayName :req.body.displayName
-    }
-    var userInfo
-    for(var i=0; i<users.length; i++) {
-        if(user.username === users[i].username) {
-            userInfo = users[i]
-            res.redirect('/auth/register')
-        }
-    }
+        USER_CD : userCode,
+        EMAIL_NM : email,
+        SALT_CD : 0,
+        PASSWORD_PW : pswd,
+        NICKNAME_NM : nickname,
+    } // 대문자로 한 이유는 DB와 네이밍을 일치하기 위함임
+    console.log(user.USER_CD);
     // 중복이 없다면 해쉬 수행
-    if(!userInfo) {
-        hasher({password: user.password}, function(err, pass, salt, hash) {
-            user.password = hash
-            user.salt = salt
-            users.push(user) // 유저 추가
-            res.redirect('/welcome')
+    var hashAndSaltPromise = function() {
+        return new Promise(function(resolve, reject) {
+            hasher({password: user.password}, function(err, pass, salt, hash) {
+                console.log(salt)
+                console.log(hash)
+                user.PASSWORD_PW = hash
+                user.SALT_CD = salt
+                console.log("hasher", user);
+                resolve('first: hasher ')
+            })
         })
     }
- }
+
+    var addUserPromise = function() {
+        return new Promise(function(resolve, reject) {
+            pool.getConnection(function(err, conn) {
+                var insertSql = 'INSERT INTO user_tb SET ?'
+                conn.query(insertSql, user, function(err, result, fields) {
+                    if(err) throw err
+                    else {
+                        console.log("DB", user);
+                        console.log("fields ",fields);
+                    }
+                })
+                conn.release()
+                resolve('second: insert db user information ')
+
+            })
+        })
+    }
+    hashAndSaltPromise()
+    .then(addUserPromise)
+    .then(function() {
+        res.redirect('/welcome')
+    })
+}

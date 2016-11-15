@@ -1,28 +1,72 @@
 exports.dataformat = function(d) {
     var year = d.getFullYear(),
         month = d.getMonth()+1,
-        day = d.getDay(),
+        day = d.getDate(),
         hours = d.getHours(),
         minutes = d.getMinutes(),
         seconds = d.getSeconds()
-    
+
     var todayDate = year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds
     console.log("todayDate", todayDate)
     return todayDate
-}  
+}
+
+exports.isCommonFormatDate = function(d,n) {
+    var currentDate = 0
+    var userCode = 1
+    var fileDate = 2
+
+    var year = d.getFullYear(),
+        month = d.getMonth()+1,
+        day = d.getDate(),
+        hours = d.getHours(),
+        minutes = d.getMinutes(),
+        seconds = d.getSeconds(),
+        millise = d.getMilliseconds()
+
+    var stringFormat = null
+    var todayDate = null
+    switch (n) {
+        case 0:
+            stringFormat = year+"/"+month+"/"+day+"/"+hours+":"+minutes+":"+seconds
+        break;
+        case 1:
+            var randomString = isRandomString();
+            todayDate =  year+""+month+""+day+""+hours+""+minutes
+            stringFormat = todayDate+""+randomString
+        break;
+        case 2: // 지금은 이 밑 함수를 씀. 채팅 어플에서 추후 수정할 예정
+            var title = "chattingApp"
+            todayDate = year+""+month+""+day+""+hours+""+minutes+""+seconds+""+millise
+            stringFormat = title+""+todayDate
+        break;
+        default:
+            stringFormat = "error"
+    }
+    console.log("sumString", stringFormat)
+    return stringFormat
+}
 
 exports.isFormatfileDate = function(d) {
     var year = d.getFullYear(),
         month = d.getMonth()+1,
-        day = d.getDay(),
+        day = d.getDate(),
         hours = d.getHours(),
         minutes = d.getMinutes(),
         seconds = d.getSeconds(),
         millise = d.getMilliseconds();
-    
     var title = "chattingApp"
     var todayDate = year+""+month+""+day+""+hours+""+minutes+""+seconds+""+millise
     var sumString = title+""+todayDate
     console.log("sumString", sumString)
     return sumString
-}  
+}
+function isRandomString(){
+    var ALPHA = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    var randomString='';
+    for(var i=0; i<6; i++) {
+        var randNum = Math.floor(Math.random()*ALPHA.length);
+        randomString += ALPHA[randNum];
+    }
+    return randomString;
+}

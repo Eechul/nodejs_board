@@ -1,4 +1,3 @@
-
 var mysql = require('mysql'),
     pool = mysql.createPool({
         host      : 'localhost',

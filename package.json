@@ -25,6 +25,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pbkdf2-password": "^1.2.1",
+    "promise": "^7.1.1",
     "session": "^0.1.0",
     "socket.io": "^1.5.1",
     "socket.io-stream": "^0.9.1",
