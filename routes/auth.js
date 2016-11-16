@@ -15,8 +15,8 @@ exports.login = function(req, res) {
                 <input type="password" name="password" placeholder="password"/>
             </p>
             <p>
-                <input type="submit" value="로그인"/>
-                <a href="/auth/register">가입</a>
+                <input type="submit" value="Log in"/>
+                <a href="/auth/register">Register</a>
             </p>
         </form>
     `;
@@ -59,9 +59,9 @@ exports.loginPost = passport.authenticate(
 //     }
 // }
  exports.welcome = function(req, res) {
-    if(req.user && req.user.displayName) {
+    if(req.user) {
         res.send(`
-            <h1>Hello, ${req.user.displayName}
+            <h1>Hello, ${req.user.NICKNAME_NM}
             <a href="/auth/logout">logout</a>
             `);
     } else {
@@ -101,7 +101,7 @@ exports.loginPost = passport.authenticate(
     // 중복이 없다면 해쉬 수행
     var hashAndSaltPromise = function() {
         return new Promise(function(resolve, reject) {
-            hasher({password: user.password}, function(err, pass, salt, hash) {
+            hasher({password: user.PASSWORD_PW}, function(err, pass, salt, hash) {
                 console.log(salt)
                 console.log(hash)
                 user.PASSWORD_PW = hash

@@ -104,7 +104,7 @@ app.post(
         {
             successRedirect: '/welcome',
             failureRedirect: '/auth/login',
-            failureFlash: false
+            failureFlash: true
             // 인증에 실패할때 메세지를 한번 보여줌
         }
     )

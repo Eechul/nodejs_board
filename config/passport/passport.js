@@ -12,22 +12,14 @@ module.exports = function(app) {
         done(null, user.USER_CD);
     })
     passport.deserializeUser(function(id, done) {
-        // for(var i=0; i<users.length; i++) {
-        //     if(id === users[i].username) {
-        //         var user = users[i]
-        //         console.log("deserializeUser", "디시리얼라이즈유저");
-        //         done(null, user)
-        //     }
-        // }
-        // console.log('1');
         pool.getConnection(function(err, conn) {
             var selectSql = 'SELECT * FROM user_tb'
             conn.query(selectSql, function(err, users, fields) {
                 for(var i =0; i<users.length; i++) {
                     var user = users[i]
                     if(user.USER_CD === id) {
-
-                        done(null, user.USER_CD);
+                        console.log("deserializeUser", "디시리얼라이즈유저");
+                        done(null, user);
                     }
                 }
             })
@@ -42,28 +34,16 @@ module.exports = function(app) {
             // 전체 유저의 아이디 비교해서
             // 같으면, 유저정보에서 salt 가져와서 입력한 pwd와 암호화하고
             // 그 결과가 유저정보의 pwd(hash)값과 같으면 로그인 성공
-            // for(var i=0; i<users.length; i++) {
-            //     if(uname === users[i].username) {
-            //         user = users[i]
-            //         break;
-            //     }
-            // }
             pool.getConnection(function(err, conn) {
                 console.log('1');
                 var selectSql = 'SELECT * FROM user_tb WHERE EMAIL_NM = ?'
                 conn.query(selectSql, uname, function(err, users, fields) {
-                    console.log('2');
                     var user = users[0]
                     if(err) throw err // 쿼리문 에러 출력
                     else if(!user){ // user 존재하지 않을때,
-                        console.log('3');
                         done(null, false);
                     } else { // user 존재할때
-                        console.log('4');
                         return hasher({password: pwd, salt:user.SALT_CD}, function(err, pass, salt, hash) {
-                            console.log(pwd);
-                            console.log("user", user);
-                            console.log("hash", hash);
                             if(hash == user.PASSWORD_PW) {
                                 console.log('5');
                                 done(null, user)
