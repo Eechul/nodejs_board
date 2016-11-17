@@ -1,6 +1,6 @@
 var hasher  = require('../config/hasher/pbkfd2_password')()
 var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy
+// var LocalStrategy = require('passport-local').Strategy
 var users = require('../config/db/model.js')()
 var pool = require('../config/db/mysql').pool
 var Promise = require('promise')
@@ -17,6 +17,10 @@ exports.login = function(req, res) {
             <p>
                 <input type="submit" value="Log in"/>
                 <a href="/auth/register">Register</a>
+            </p>
+            <p>
+                <a href="/auth/facebook">Facebook Log in</a>
+
             </p>
         </form>
     `;
@@ -59,7 +63,7 @@ exports.loginPost = passport.authenticate(
 //     }
 // }
  exports.welcome = function(req, res) {
-    if(req.user) {
+    if(req.user && req.user.NICKNAME_NM) {
         res.send(`
             <h1>Hello, ${req.user.NICKNAME_NM}
             <a href="/auth/logout">logout</a>
@@ -85,11 +89,10 @@ exports.loginPost = passport.authenticate(
 
 // 이부분 다시
  exports.registerPost = function(req, res) {
-    var userCode = require('../config/date/dateFormat').isCommonFormatDate(new Date(),1),
+    var userCode = require('../config/etc/userCode').getUserCode(),
         email = req.body.username,
         pswd = req.body.password,
         nickname = req.body.nickname
-
     var user = {
         USER_CD : userCode,
         EMAIL_NM : email,
@@ -101,12 +104,10 @@ exports.loginPost = passport.authenticate(
     // 중복이 없다면 해쉬 수행
     var hashAndSaltPromise = function() {
         return new Promise(function(resolve, reject) {
+            console.log("1",user);
             hasher({password: user.PASSWORD_PW}, function(err, pass, salt, hash) {
-                console.log(salt)
-                console.log(hash)
                 user.PASSWORD_PW = hash
                 user.SALT_CD = salt
-                console.log("hasher", user);
                 resolve('first: hasher ')
             })
         })
@@ -114,24 +115,25 @@ exports.loginPost = passport.authenticate(
 
     var addUserPromise = function() {
         return new Promise(function(resolve, reject) {
+            console.log("3");
             pool.getConnection(function(err, conn) {
+                if(err) throw err
                 var insertSql = 'INSERT INTO user_tb SET ?'
                 conn.query(insertSql, user, function(err, result, fields) {
                     if(err) throw err
-                    else {
-                        console.log("DB", user);
-                        console.log("fields ",fields);
-                    }
                 })
                 conn.release()
                 resolve('second: insert db user information ')
-
             })
         })
     }
     hashAndSaltPromise()
     .then(addUserPromise)
     .then(function() {
-        res.redirect('/welcome')
+        req.login(user, function() {
+            return req.session.save( function() {
+                res.redirect('/welcome')
+            })
+        })
     })
 }

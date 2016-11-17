@@ -1,8 +1,8 @@
 module.exports = function(app) {
     var pool = require('../db/mysql').pool
-    // var users = require('../db/model.js')()
     var passport = require('passport')
     var LocalStrategy = require('passport-local').Strategy
+    var FacebookStrategy = require('passport-facebook').Strategy;
     var hasher = require('../hasher/pbkfd2_password')()
     app.use(passport.initialize())
     app.use(passport.session())
@@ -24,18 +24,15 @@ module.exports = function(app) {
                 }
             })
         })
-        // console.log('2');
     })
     passport.use(new LocalStrategy(
         function(username, password, done) {
             var uname = username,
                 pwd = password
-                console.log(pwd, uname);
             // 전체 유저의 아이디 비교해서
             // 같으면, 유저정보에서 salt 가져와서 입력한 pwd와 암호화하고
             // 그 결과가 유저정보의 pwd(hash)값과 같으면 로그인 성공
             pool.getConnection(function(err, conn) {
-                console.log('1');
                 var selectSql = 'SELECT * FROM user_tb WHERE EMAIL_NM = ?'
                 conn.query(selectSql, uname, function(err, users, fields) {
                     var user = users[0]
@@ -55,19 +52,23 @@ module.exports = function(app) {
                     }
                 })
             })
-            // if(!user) {
-            //     done(null, false)
-            // } else {
-            //      return hasher({password: pwd, salt:user.salt}, function(err, pass, salt, hash) {
-            //         if(hash === user.password) {
-            //             done(null, user)
-            //         } else {
-            //             done(null, false)
-            //         }
-            //     })
-            // }
         }
     ))
-    console.log("1111");
+
+    passport.use(new FacebookStrategy({
+        clientID: "184229931975831",
+        clientSecret: "a7bd585609e6f42f289a45ad9e8671da",
+        callbackURL: "http://localhost:4002/auth/facebook/callback",
+        profileFields: ['email'] //This
+
+    },
+    function(accessToken, refreshToken, profile, done) {
+        console.log(profile);
+        var user = {
+            USER_CD : profile.id,
+            EMAIL_NM :'D'
+        }
+    }));
+
     return passport
 }

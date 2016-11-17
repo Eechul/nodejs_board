@@ -97,6 +97,7 @@ io.on('connection', function(socket) {
 // 로그인 라우터 test 단계
 app.get('/auth/login', routes.auth.login)
 // app.post('/auth/login', routes.auth.loginPost)
+
 app.post(
     '/auth/login',
     passport.authenticate(
@@ -114,6 +115,21 @@ app.post(
     //     })
     // }
 )
+
+app.get('/auth/facebook',
+    passport.authenticate('facebook', {scope: ['email']})
+)
+app.get('/auth/facebook/callback',
+    passport.authenticate
+    (
+        'facebook',
+        {
+            successRedirect: '/welcome',
+            failureRedirect: '/auth/login'
+        }
+    )
+)
+
 app.get('/welcome', routes.auth.welcome)
 app.get('/auth/logout', routes.auth.logout)
 app.get('/auth/register', routes.auth.register)
