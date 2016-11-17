@@ -59,15 +59,40 @@ module.exports = function(app) {
         clientID: "184229931975831",
         clientSecret: "a7bd585609e6f42f289a45ad9e8671da",
         callbackURL: "http://localhost:4002/auth/facebook/callback",
-        profileFields: ['email'] //This
-
+        profileFields: ['displayName', 'email']
     },
     function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
+        var userInfo = profile._json
         var user = {
-            USER_CD : profile.id,
-            EMAIL_NM :'D'
+            USER_CD : userInfo.id,
+            EMAIL_NM : userInfo.email, // 맞는지 확인해야함
+            SALT_CD : 0,
+            PASSWORD_PW : 0,
+            NICKNAME_NM : userInfo.name
+            // salt 와 pwd 부분은 어떻게 처리해야할까?
         }
+
+        console.log(user)
+
+
+
+        // 밑의 설계는 일단 보류, 일단 기본적인 간편로그인을 구현하자
+
+        // 하고자 하는것은 퍼미션에서는 email을 받고는 있지만
+        // 사용자는 이 eamil을 우리에게 안 줄수 있는 권한이 존재한다
+        // 따라서 간편로그인 버튼 클릭 -> 로그인성공 구도가 아닌
+        // 간편로그인 버튼 클릭 -> 회원가입(이메일 추가입력) -> 로그인성공 구도로 감
+
+        // 1. id 값만 DB 와 비교한다
+        // 2. 값이 존재한다면, done 함수를 통해 successRedirect로 넘어간다.
+        // 2-1.id값이 존재한다는 것은, 회원가입 직전까지 간 경우 1)와
+        // 회원가입을 마친 경우 2)가 존재한다
+
+        // 2-1-1) 직전까지 간 경우는 user 테이블에 email = null 일때이다
+        // 이때는 회원가입 폼에서 submit 하게 만든다
+
+        // 2-1-2) 회원가입을 마친 경우는 1)과 반대로  user 테이블에 email != null 이다
+        // 간편로그인을 실시하면 된다.
     }));
 
     return passport

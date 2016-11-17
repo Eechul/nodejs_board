@@ -11,8 +11,6 @@ app.set('views', __dirname+'/views');
 var ss = require('socket.io-stream');
 var routes = require('./routes/index.js')
 
-
-
 var name = 0 // 임시 아이디
 var userInfo = {
     id : 0, // 소켓 아이디

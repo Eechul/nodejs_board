@@ -1,7 +1,6 @@
 var hasher  = require('../config/hasher/pbkfd2_password')()
 var passport = require('passport')
 // var LocalStrategy = require('passport-local').Strategy
-var users = require('../config/db/model.js')()
 var pool = require('../config/db/mysql').pool
 var Promise = require('promise')
 
