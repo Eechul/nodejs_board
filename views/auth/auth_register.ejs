@@ -5,20 +5,27 @@
         <title></title>
     </head>
     <body>
-            <h2> Register </h2>
+            <h2> Register</h2>
 
             <form action="/auth/registerPost" method="post">
                 <p>
-                    <input type="email" name="username" placeholder="username"/>
+                    <input type="email" name="username" placeholder="E-mail"/>
+                </p>
+                <% if(simpleLoginUser === null) {%>
+                    <p>
+                        <input type="password" name="password" placeholder="Password"/>
+                    </p>
+                <%}%>
+                <p>
+                    <% if(simpleLoginUser) {%>
+                        <input type="text" name="nickname" placeholder="Nickname" value="<%=simpleLoginUser.NICKNAME_NM%>"/>
+                    <%} else {%>
+                        <input type="text" name="nickname" placeholder="Nickname"/>
+                    <%}%>
                 </p>
                 <p>
-                    <input type="password" name="password" placeholder="password"/>
-                </p>
-                <p>
-                    <input type="text" name="nickname" placeholder="nickname"/>
-                </p>
-                <p>
-                    <input type="submit" value="가입하기"/>
+                    <span><input type="submit" value="Join"/></span>
+                    <span><a href="/auth/logout">Cancel</a></span>
                 </p>
             </form>
     </body>

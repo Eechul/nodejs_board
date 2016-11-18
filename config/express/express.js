@@ -2,6 +2,7 @@ module.exports = function() {
     var express = require('express')
     var session = require('express-session')
     var MySQLStore = require('express-mysql-session')(session)
+    var passport = require('passport')
     var bodyParser = require('body-parser')
     var ejs = require('ejs');
     var path = require('path');
@@ -21,6 +22,8 @@ module.exports = function() {
     }))
     app.use(express.static('public'));
     app.use(bodyParser.urlencoded({ extended: false }));
-
+    app.use(passport.initialize())
+    app.use(passport.session())
+    
     return app
 }

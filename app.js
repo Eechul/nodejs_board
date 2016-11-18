@@ -117,10 +117,39 @@ app.post(
 app.get('/auth/facebook',
     passport.authenticate('facebook', {scope: ['email']})
 )
+app.get('/auth/naver',
+    passport.authenticate('naver')
+)
+app.get('/auth/kakao',
+    passport.authenticate('kakao')
+)
+
 app.get('/auth/facebook/callback',
     passport.authenticate
     (
         'facebook',
+        {
+            successRedirect: '/welcome',
+            failureRedirect: '/auth/login'
+        }
+    )
+)
+// creates an account if no account of the new user
+app.get('/auth/naver/callback',
+    passport.authenticate
+    (
+        'naver',
+        {
+        successRedirect: '/welcome',
+        failureRedirect: '/auth/login'
+        }
+    )
+)
+
+app.get('/auth/kakao/callback',
+    passport.authenticate
+    (
+        'kakao',
         {
             successRedirect: '/welcome',
             failureRedirect: '/auth/login'

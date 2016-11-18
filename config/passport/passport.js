@@ -3,9 +3,11 @@ module.exports = function(app) {
     var passport = require('passport')
     var LocalStrategy = require('passport-local').Strategy
     var FacebookStrategy = require('passport-facebook').Strategy;
+    var NaverStrategy = require('passport-naver').Strategy;
+    KakaoStrategy = require('passport-kakao').Strategy;
+
     var hasher = require('../hasher/pbkfd2_password')()
-    app.use(passport.initialize())
-    app.use(passport.session())
+
 
     passport.serializeUser(function(user, done) {
         console.log("serializeUser", "시리얼라이즈유저");
@@ -23,7 +25,10 @@ module.exports = function(app) {
                     }
                 }
             })
+
+            conn.release()
         })
+
     })
     passport.use(new LocalStrategy(
         function(username, password, done) {
@@ -51,6 +56,7 @@ module.exports = function(app) {
                         })
                     }
                 })
+                conn.release()
             })
         }
     ))
@@ -63,16 +69,37 @@ module.exports = function(app) {
     },
     function(accessToken, refreshToken, profile, done) {
         var userInfo = profile._json
-        var user = {
+        var userSet = {
             USER_CD : userInfo.id,
             EMAIL_NM : userInfo.email, // 맞는지 확인해야함
             SALT_CD : 0,
             PASSWORD_PW : 0,
-            NICKNAME_NM : userInfo.name
+            NICKNAME_NM : userInfo.name,
+            PROVIDER_NM : "facebook"
             // salt 와 pwd 부분은 어떻게 처리해야할까?
         }
-
-        console.log(user)
+        pool.getConnection(function(err, conn) {
+            console.log("1");
+            var selectSql = 'SELECT * FROM user_tb WHERE USER_CD = ?'
+            conn.query(selectSql, userSet.USER_CD, function(err, users, fields) {
+                console.log("2");
+                var user = users[0]
+                if(err) throw err
+                else if(!user) {
+                    var insertSql = 'INSERT INTO user_tb SET ?'
+                    conn.query(insertSql, userSet, function(err, result, fields) {
+                        console.log("3");
+                        if(err) throw err
+                        else {
+                            done(null, user)
+                        }
+                    })
+                } else {
+                    done(null, user)
+                }
+            })
+            conn.release()
+        })
 
 
 
@@ -94,6 +121,88 @@ module.exports = function(app) {
         // 2-1-2) 회원가입을 마친 경우는 1)과 반대로  user 테이블에 email != null 이다
         // 간편로그인을 실시하면 된다.
     }));
+
+    passport.use(new NaverStrategy({
+        clientID: "GvmEwcSqYZ8AuUO75JQ8",
+        clientSecret: "BshH2i6wpf",
+        callbackURL: "http://localhost:4002/auth/naver/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        var userInfo = profile._json
+        console.log(userInfo);
+        var userSet = {
+            USER_CD : userInfo.id,
+            EMAIL_NM : userInfo.email,
+            SALT_CD : null,
+            PASSWORD_PW : null,
+            NICKNAME_NM : userInfo.nickname,
+            PROVIDER_NM : "naver"
+        }
+        pool.getConnection(function(err, conn) {
+            console.log("1");
+            var selectSql = 'SELECT * FROM user_tb WHERE USER_CD = ?'
+            conn.query(selectSql, userSet.USER_CD, function(err, users, fields) {
+                console.log("2");
+                var user = users[0]
+                console.log(user);
+                if(err) throw err
+                else if(!user) {
+                    var insertSql = 'INSERT INTO user_tb SET ?'
+                    conn.query(insertSql, userSet, function(err, result, fields) {
+                        console.log("3");
+                        if(err) throw err
+                        else {
+                            done(null, user)
+                        }
+                    })
+                } else {
+                    done(null, user)
+                }
+            })
+            conn.release()
+        })
+    }
+))
+    passport.use(new KakaoStrategy({
+        clientID : "fb005eccecbcc77eecb28d48953e545c",
+        callbackURL : "http://localhost:4002/auth/kakao/callback"
+      },
+      function(accessToken, refreshToken, profile, done) {
+          var userInfo = profile._json
+          console.log(userInfo);
+          var userSet = {
+              USER_CD : userInfo.id,
+            //   EMAIL_NM : userInfo.email,
+              SALT_CD : null,
+              PASSWORD_PW : null,
+              NICKNAME_NM : userInfo.properties.nickname,
+              PROVIDER_NM : "kakao"
+          }
+          pool.getConnection(function(err, conn) {
+              console.log("1");
+              var selectSql = 'SELECT * FROM user_tb WHERE USER_CD = ?'
+              conn.query(selectSql, userSet.USER_CD, function(err, users, fields) {
+                  console.log("2");
+                  var user = users[0]
+                  console.log(user);
+                  if(err) throw err
+                  else if(!user) {
+                      var insertSql = 'INSERT INTO user_tb SET ?'
+                      conn.query(insertSql, userSet, function(err, result, fields) {
+                          console.log("3");
+                          if(err) throw err
+                          else {
+                              done(null, user)
+                          }
+                      })
+                  } else {
+                      done(null, user)
+                  }
+              })
+              conn.release()
+          })
+      }
+))
 
     return passport
 }
