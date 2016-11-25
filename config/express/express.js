@@ -1,12 +1,15 @@
 module.exports = function() {
-    var express = require('express')
-    var session = require('express-session')
-    var MySQLStore = require('express-mysql-session')(session)
-    var passport = require('passport')
-    var bodyParser = require('body-parser')
-    var ejs = require('ejs');
-    var path = require('path');
-    var app = express();
+    var express = require('express'),
+        session = require('express-session'),
+        MySQLStore = require('express-mysql-session')(session),
+        passport = require('passport'),
+        bodyParser = require('body-parser'),
+        ejs = require('ejs'),
+        path = require('path'),
+        app = express()
+        multer = require('multer')
+
+
     app.locals.pretty = true;
     app.use(session({
         secret: 'keyboard cat',
@@ -24,6 +27,7 @@ module.exports = function() {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(passport.initialize())
     app.use(passport.session())
+    app.use(multer({ dest: './uploads/'}))
     
     return app
 }

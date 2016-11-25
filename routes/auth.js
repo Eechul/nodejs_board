@@ -113,10 +113,12 @@ exports.loginPost = passport.authenticate(
         NICKNAME_NM : nickname
         // PROVIDER_NM : "local"
     }
+    // select 하고 email 중복일시, 가입 멈추기
     if(req.user && req.user.NICKNAME_NM) { // 간편로그인 회원가입
         var user_cd = req.user.USER_CD
         pool.getConnection(function(err, conn) {
             if(err) throw err
+
             var updateSql = 'UPDATE user_tb SET EMAIL_NM = ? WHERE USER_CD = ?'
             conn.query(updateSql, [email, user_cd], function(err, result, fields) {
                 if(err) throw err
@@ -133,15 +135,7 @@ exports.loginPost = passport.authenticate(
     } else { // 기존 회원가입
         user.USER_CD = require('../config/etc/userCode').getUserCode()
         user.PASSWORD_PW = req.body.password
-
-        // var user = {
-        //     USER_CD : userCode,
-        //     EMAIL_NM : email,
-        //     PASSWORD_PW : pswd,
-        //     NICKNAME_NM : nickname,
-        //     PROVIDER_NM : "local"
-        // } // 대문자로 한 이유는 DB와 네이밍을 일치하기 위함임
-        // 중복이 없다면 해쉬 수행
+        user.PROVIDER_NM = "local"
         var hashAndSaltPromise = function() {
             return new Promise(function(resolve, reject) {
                 console.log("1",user);

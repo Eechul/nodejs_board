@@ -6,7 +6,11 @@
     </head>
     <body>
             <h2> Register</h2>
-
+            <% if(simpleLoginUser !== null) {%>
+                <p>
+                    <h5>추가적인 회원정보를 받습니다</h5>
+                </p>
+            <%}%>
             <form action="/auth/registerPost" method="post">
                 <p>
                     <input type="email" name="username" placeholder="E-mail"/>
